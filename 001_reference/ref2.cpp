@@ -107,3 +107,51 @@ int main() {
 	return 0;
 } 	// destructor
 
+/* result
+Box::Box(const string&) = 0x100408000:Box("global_box")
+
+====== start ==============================
+
+----para_value()
+Box::Box(const Box&) = 0xffffcbb0:Box("global_box")
+--------start para_value()
+0xffffcbb0:Box("global_box")
+--------end para_value()
+virtual Box::~Box() = 0xffffcbb0:Box("para_value")
+0x100408000:Box("global_box")
+
+----para_ref()
+--------start para_ref()
+0x100408000:Box("global_box")
+--------end para_ref()
+0x100408000:Box("para_ref")
+
+----para_rvalue(move(a))
+--------start para_rvalue()
+0x100408000:Box("para_ref")
+--------end para_rvalue()
+0x100408000:Box("para_rvalue")
+
+----para_pointer()
+--------start para_pointer()
+0x100408000:Box("para_rvalue")
+--------end para_pointer()
+
+----ret_value()
+Box::Box(const Box&) = 0xffffcba0:Box("ret_value")
+
+----ret_ref()
+
+----Box &&b = ret_rvalue()
+----ret_rvalue()
+----Box b = ret_rvalue()
+Box::Box(const Box&) = 0xffffcb90:Box("ret_rvalue")
+
+----ret_pointer()
+
+====== end ==============================
+virtual Box::~Box() = 0xffffcb90:Box("ret_rvalue")
+virtual Box::~Box() = 0xffffcba0:Box("ret_value")
+virtual Box::~Box() = 0x100408000:Box("ret_rvalue")
+
+ */

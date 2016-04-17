@@ -47,3 +47,47 @@ int main() {
 	return 0;
 } 	// destructor
 
+/* result
+====== start ==============================
+----create Box objects
+Box::Box(const string&) = 0xffffcb90:Box("a")
+Box::Box(const string&) = 0xffffcb80:Box("b")
+Box::Box(const Box&) = 0xffffcb70:Box("a")
+
+----create a list and push objects to this list
+Box::Box(const Box&) = 0x6000843d0:Box("a")
+Box::Box(const Box&) = 0x600084400:Box("b")
+Box::Box(const Box&) = 0x600084430:Box("a")
+Box::Box(const Box&) = 0x600084460:Box("b")
+
+----traverse a list
+Box::Box(const Box&) = 0xffffcb50:Box("a")
+0xffffcb50:Box("a")
+virtual Box::~Box() = 0xffffcb50:Box("a")
+Box::Box(const Box&) = 0xffffcb50:Box("b")
+0xffffcb50:Box("b")
+virtual Box::~Box() = 0xffffcb50:Box("b")
+Box::Box(const Box&) = 0xffffcb50:Box("a")
+0xffffcb50:Box("a")
+virtual Box::~Box() = 0xffffcb50:Box("a")
+Box::Box(const Box&) = 0xffffcb50:Box("b")
+0xffffcb50:Box("b")
+virtual Box::~Box() = 0xffffcb50:Box("b")
+
+----traverse a list using ref
+0x6000843d0:Box("a")
+0x600084400:Box("b")
+0x600084430:Box("a")
+0x600084460:Box("b")
+
+----pop_front box
+virtual Box::~Box() = 0x6000843d0:Box("a")
+virtual Box::~Box() = 0x600084400:Box("b")
+virtual Box::~Box() = 0x600084430:Box("a")
+virtual Box::~Box() = 0x600084460:Box("b")
+
+====== end   ==============================
+virtual Box::~Box() = 0xffffcb70:Box("a")
+virtual Box::~Box() = 0xffffcb80:Box("b")
+virtual Box::~Box() = 0xffffcb90:Box("a")
+*/
