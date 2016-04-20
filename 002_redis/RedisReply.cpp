@@ -2,7 +2,7 @@
 
 log4cplus::Logger RedisReply::logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("RedisReply"));
 
-RedisReply::RedisReply(redisReply* reply) {
+RedisReply::RedisReply(redisReply* reply): _reply(reply) {
 	LOG4CPLUS_TRACE(logger, "constructor redisReply*");
 }
 
