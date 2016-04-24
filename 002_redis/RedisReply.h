@@ -1,8 +1,12 @@
-#ifndef REDISREPLY_H_
-#define REDISREPLY_H_
+#ifndef CPPLAB_REDISREPLY_H_
+#define CPPLAB_REDISREPLY_H_
 #include <iostream>
+#include <vector>
+#include <string>
 #include <log4cplus/loggingmacros.h>
 #include <hiredis/hiredis.h>
+
+#include "BinString.h"
 
 using namespace std;
 
@@ -13,12 +17,16 @@ public:
 	RedisReply(redisReply*);	
 	RedisReply(void*);	
 	virtual ~RedisReply();
-	string getValue();
-	void free();
+	long long getInteger();
+	BinString getBinString();
+	vector<BinString> getArray();
+	static const string& getTypeName( int );
 	friend ostream& operator<< ( ostream& os, const RedisReply& );
 private:
 	static log4cplus::Logger logger;
+	static string typeNames[];
 	redisReply* _reply;
+
 };
 
-#endif /* REDISREPLY_H_ */
+#endif /* CPPLAB_REDISREPLY_H_ */
