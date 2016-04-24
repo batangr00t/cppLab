@@ -36,8 +36,7 @@ vector<BinString> RedisReply::getArray() {
 	array.reserve(_reply->elements);
 	for ( size_t i=0; i<_reply->elements; i++ ) {
 		LOG4CPLUS_TRACE(logger, "push_back[" << i << "]");
-		BinString *bs = new BinString(_reply->element[i]->len, _reply->element[i]->str );
-		array.push_back( move(*bs) );
+		array.push_back( BinString(_reply->element[i]->len, _reply->element[i]->str ) );
 	}
 	return array;
 }
