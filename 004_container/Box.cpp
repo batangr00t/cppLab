@@ -29,7 +29,7 @@ Box::Box(const string& name) {
 
 Box::Box(int id ) {
 	_id = id;
-	_name = to_string(_id);
+	//_name = to_string(_id);
 	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
 }
 

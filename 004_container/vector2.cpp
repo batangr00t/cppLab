@@ -19,6 +19,7 @@ int main() {
 	vec1.push_back( Box(2) );
 	vec1.push_back( Box(3) );
 	vec1.push_back( Box(4) );
+	vec1.push_back( Box(5) );
 
 	cout << "2. emplace_back -------------" << endl;
 	vector<Box> vec2;

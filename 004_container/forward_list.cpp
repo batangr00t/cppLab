@@ -7,7 +7,7 @@
 #include <forward_list>
 #include <algorithm>
 #include <iostream>
-
+#include "Box.h"
 using namespace std;
 
 int main() {
@@ -42,6 +42,17 @@ int main() {
 	cout << "4. find min  ----------" << endl;
 	auto pair = minmax_element( fl.begin(), fl.end() );
 	cout << "min: " << *pair.first << ", max:" << *pair.second  << endl;
+
+	cout << "5. forward_list  box ----------" << endl;
+	{
+		forward_list<Box> flb;
+
+		flb.push_front(Box(1));
+		flb.push_front(Box(2));
+		flb.push_front(Box(3));
+		flb.push_front(Box(4));
+		flb.push_front(Box(5));
+	}
 
 	cout << "----------  end  -----------------" << endl;
 }
