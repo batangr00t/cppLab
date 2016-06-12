@@ -19,8 +19,8 @@ int main() {
 	vec1.push_back( Box(2) );
 	vec1.push_back( Box(3) );
 	vec1.push_back( Box(4) );
-	vec1.push_back( Box(5) );
 
+	//
 	cout << "2. emplace_back -------------" << endl;
 	vector<Box> vec2;
 	vec2.reserve(4);
@@ -28,6 +28,14 @@ int main() {
 	vec2.emplace_back( Box(2) );
 	vec2.emplace_back( Box(3) );
 	vec2.emplace_back( Box(4) );
+
+	cout << "3. emplace_back -------------" << endl;
+	vector<Box> vec3;
+	vec3.reserve(4);
+	vec3.emplace_back( 1 );
+	vec3.emplace_back( 2 );
+	vec3.emplace_back( 3 );
+	vec3.emplace_back( 4 );
 
 	cout << "----------  end  -----------------" << endl;
 }
