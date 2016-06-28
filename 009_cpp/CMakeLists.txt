@@ -18,8 +18,6 @@ add_executable( val
 	val.cpp )
 add_executable( move 
 	move.cpp )
-add_executable( oper 
-	oper.cpp )
 add_executable( oper oper.cpp )
 add_executable( cons cons.cpp )
 add_executable( assign assign.cpp )

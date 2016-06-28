@@ -21,6 +21,7 @@ public:
 };
 
 class Circle {
+public:
 	int radius;
 	Point center;
 };
@@ -28,6 +29,8 @@ class Circle {
 int main() {
 	Circle c1;
 	Circle c2 = c1;
+
+	cout << c2.radius << endl;
 }
 
 
