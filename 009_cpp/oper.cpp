@@ -1,6 +1,7 @@
 /*
  * oper.cpp
  *
+<<<<<<< HEAD
  *  Created on: 2016. 6. 28.
  *      Author: LG CNS
  */
@@ -89,6 +90,4 @@ int main() {
 
 	cout << "------- end ---" << endl;
 }
-
-
 

@@ -20,4 +20,7 @@ add_executable( move
 	move.cpp )
 add_executable( oper 
 	oper.cpp )
-
+add_executable( oper oper.cpp )
+add_executable( cons cons.cpp )
+add_executable( assign assign.cpp )
+add_executable( inherit inherit.cpp )
