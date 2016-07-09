@@ -1,8 +1,9 @@
 /*
  * oper.cpp
  *
- *  Created on: 2016. 6. 25.
- *      Author: juik
+<<<<<<< HEAD
+ *  Created on: 2016. 6. 28.
+ *      Author: LG CNS
  */
 #include <iostream>
 
@@ -12,25 +13,13 @@ class Point {
 private:
 	int x;
 	int y;
-
 public:
-	Point(): x(0), y(0) {
-		cout << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
-	}
-
 	Point( int a, int b ): x(a), y(b) {
-		cout << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
+		cout << this << __PRETTY_FUNCTION__<< *this << endl;
 	}
 
 	~Point() {
-		cout << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
-	};
-
-	Point sum( const Point &p ) {
-		x += p.x;
-		y += p.y;
-		return *this;
-		//return Point( x + p.x, y + p.y );
+		cout << this << __PRETTY_FUNCTION__<< *this << endl;
 	}
 
 	Point operator+( const Point& p ) {
@@ -40,46 +29,65 @@ public:
 
 	Point& operator+=( const Point& p ) {
 		cout << *this << " += " << p << endl;
+		this->x += p.x;
+		this->y += p.y;
+		return *this;
+	}
+
+	Point& sum( const Point& p ) {
+		cout << *this << " += " << p << endl;
 		x += p.x;
 		y += p.y;
 		return *this;
 	}
 
-	void print() {
-		cout << "(" << x << ", " << y << ")" << endl;
+	Point& operator()( int n ) {
+		x += n;
+		y += n;
+		return *this;
 	}
 
-	friend ostream& operator<< (ostream& os, const Point& p );
-
+	friend ostream& operator<<( ostream& os, const Point& p );
 };
 
-ostream& operator<< (ostream& os, const Point& p ) {
-	os << "(" << p.x << ", " << p.y << ")";
+ostream& operator<<( ostream& os, const Point& p ) {
+	os << "(" << p.x << "," << p.y << ")";
 	return os;
 }
 
 int main() {
-	cout << " -------- start " << endl;
-	Point p0(0,0);
-	Point p1(1,1);
-	Point p2(2,2);
-	Point p3;
-	Point p4;
+	cout << "------- start ---" << endl;
 
-	cout << " -------- + " << endl;
-	p3 = p0 + p1 + p2;
-	cout << "p3 = " << p3 << endl;
+	Point p1 ( 1, 1 );
+	Point p2 ( 2, 2 );
+	Point p3 ( 3, 3 );
 
-	cout << " -------- += " << endl;
+	cout << ( p1 + p2 + p3 ) << endl;
+
+	Point p4(1,1);
+
 	p4 += p1 += p2 += p3;
-	//p4 += p2;
+
 	cout << "p1 = " << p1 << endl;
 	cout << "p2 = " << p2 << endl;
 	cout << "p3 = " << p3 << endl;
 	cout << "p4 = " << p4 << endl;
 
-	cout << " -------- end " << endl;
+	Point p5(0,0);
+	p5.sum(Point(1,1)).sum(Point(10,10)).sum(Point(20,100));
+	cout << "p5 = " << p5 << endl;
 
+	cout << "x = " << p5(0) << endl;
+	cout << "y = " << p5(1) << endl;
+
+	Point p6(0,0);
+	p6(1)(200)(1000);
+	cout << p6 << endl;
+
+	cout << "before " << p2 << endl;
+	p2.operator+=(p3);
+	cout << "after  " << p2 << endl;
+
+	cout << "------- end ---" << endl;
 }
-
 
