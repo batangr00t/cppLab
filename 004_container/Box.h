@@ -13,13 +13,15 @@ using namespace std;
 
 class Box {
 public:
-//	Box();
+	Box();
 	Box(const Box&);
+	Box(const Box&&);
 	Box(const string&);
 	Box(int);
 	virtual ~Box();
 	const string& getName();
 	void setName(const string&);
+	void operator=(const Box&);
 	friend ostream& operator<< ( ostream& os, const Box &b );
 private:
 	static int seq;

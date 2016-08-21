@@ -8,4 +8,4 @@ add_executable( ref4b ref4b.cpp Box.cpp )
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(CMAKE_CXX_FLAGS "-std=c++11 -g")
+set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall")

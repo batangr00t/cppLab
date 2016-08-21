@@ -37,5 +37,25 @@ int main() {
 	vec3.emplace_back( 3 );
 	vec3.emplace_back( 4 );
 
+	cout << "4. copy -------------" << endl;
+	cout << "4.1 vec4 생성 -------------" << endl;
+	vector<Box> vec4;
+	vec4.emplace_back( 1 );
+	vec4.emplace_back( 2 );
+	vec4.emplace_back( 3 );
+	vec4.emplace_back( 4 );
+	cout << "4.2 vec5 = vec4  -------------" << endl;
+	vector<Box> vec5 = vec4;
+	cout << "4.3 vec4 = vec5  -------------" << endl;
+	vec4 = vec5;
+	cout << "4.3 --------------" << endl;
+	for ( const Box& b : vec4 ) {
+		cout << b << endl;
+	}
+
+	for ( const Box& b : vec5 ) {
+			cout << b << endl;
+		}
+
 	cout << "----------  end  -----------------" << endl;
 }

@@ -22,3 +22,8 @@ add_executable( oper oper.cpp )
 add_executable( cons cons.cpp )
 add_executable( assign assign.cpp )
 add_executable( inherit inherit.cpp )
+add_executable( mapinterface mapinterface.cpp )
+add_executable( sp sp.cpp )
+add_executable( temp 
+	temp.cpp
+	A.cpp )

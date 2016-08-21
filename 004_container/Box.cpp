@@ -9,13 +9,19 @@
 
 int Box::seq = 0;
 
-//Box::Box() {
-//	_id = ++Box::seq;
-//	_name = to_string(_id);
-//	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
-//}
+Box::Box() {
+	_id = ++Box::seq;
+	_name = to_string(_id);
+	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
+}
 
 Box::Box(const Box & b) {
+	_name = b._name;
+	_id = b._id;
+	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
+}
+
+Box::Box(const Box && b) {
 	_name = b._name;
 	_id = b._id;
 	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
@@ -45,6 +51,11 @@ void Box::setName(const string& name) {
 	_name = name;
 }
 
+void Box::operator=(const Box& b) {
+	_name = b._name;
+	_id = b._id;
+	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
+}
 ostream& operator<< ( ostream& os, const Box &b ) {
 	os << "Box(" << b._id << ",\"" << b._name << "\") : " << &b ;
 

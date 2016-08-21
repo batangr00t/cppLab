@@ -32,6 +32,10 @@ public:
 		cout << __PRETTY_FUNCTION__ << endl;
 	}
 
+	void setX( int n ) {
+		x = n;
+	}
+
 };
 
 CPoint print( CPoint& p ) {
@@ -44,10 +48,11 @@ int main(int argc, char * argv[]) {
 
 	cout << "---------- start -----------------" << endl;
 
-	CPoint p1(100);
+	 CPoint p1(100);
 
 	cout << "---------- b print -----------------" << endl;
 	p1 = print(p1);
+	p1.show();
 	cout << "---------- a print -----------------" << endl;
 
 	cout << "----------  end  -----------------" << endl;
