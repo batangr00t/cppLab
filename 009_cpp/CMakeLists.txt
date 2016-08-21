@@ -26,4 +26,11 @@ add_executable( mapinterface mapinterface.cpp )
 add_executable( sp sp.cpp )
 add_executable( temp 
 	temp.cpp
-	A.cpp )
+	Point.cpp
+	 )
+add_executable( stl stl.cpp 	Point.cpp )
+add_executable( temp 
+	temp.cpp
+	Point.cpp
+	 )
+add_executable( stl stl.cpp 	Point.cpp )
