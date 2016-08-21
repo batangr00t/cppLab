@@ -29,8 +29,3 @@ add_executable( temp
 	Point.cpp
 	 )
 add_executable( stl stl.cpp 	Point.cpp )
-add_executable( temp 
-	temp.cpp
-	Point.cpp
-	 )
-add_executable( stl stl.cpp 	Point.cpp )
