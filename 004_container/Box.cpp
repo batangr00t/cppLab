@@ -43,12 +43,16 @@ Box::~Box() {
 	cout << __PRETTY_FUNCTION__ << " = " << *this << endl;
 }
 
-const string& Box::getName() {
+const string& Box::getName() const {
 	return _name;
 }
 
 void Box::setName(const string& name) {
 	_name = name;
+}
+
+int Box::getId() const {
+	return _id;
 }
 
 void Box::operator=(const Box& b) {

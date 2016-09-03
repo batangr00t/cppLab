@@ -19,7 +19,8 @@ public:
 	Box(const string&);
 	Box(int);
 	virtual ~Box();
-	const string& getName();
+	const string& getName() const;
+	int getId() const;
 	void setName(const string&);
 	void operator=(const Box&);
 	friend ostream& operator<< ( ostream& os, const Box &b );
