@@ -9,3 +9,4 @@ add_executable( vec
 	main.cpp
 	Vector.cpp
 )
+
