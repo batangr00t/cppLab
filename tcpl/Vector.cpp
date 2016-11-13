@@ -59,6 +59,25 @@ Vector& Vector::operator=(const Vector& v) {
 	return *this;
 }
 
+// move constructor
+Vector::Vector(Vector&& v) : elem{v.elem}, sz{v.sz} {
+	v.elem = nullptr;
+	v.sz = 0;
+
+	cout << __PRETTY_FUNCTION__ << *this << endl;
+}
+
+// move assignment
+Vector& Vector::operator=(Vector&& v) {
+	elem = v.elem;
+	sz = v.sz;
+	v.elem = nullptr;
+	v.sz = 0;
+
+	cout << __PRETTY_FUNCTION__ << *this << endl;
+	return *this;
+}
+
 double& Vector::operator[](int i) {
 	//cout << __PRETTY_FUNCTION__ << *this << endl;
 	return elem[i];
@@ -71,6 +90,20 @@ const double& Vector::operator[](int i) const {
 
 int Vector::size() const {
 	return sz;
+}
+
+Vector operator+( const Vector& a, const Vector& b ) {
+	cout << __PRETTY_FUNCTION__ << endl;
+
+	if ( a.size() != b.size() ) throw exception{};
+
+	Vector res(a.size());
+
+	for ( int i=0; i<a.size(); ++i ) {
+		res[i] = a[i] + b[i];
+	}
+
+	return res;
 }
 
 // print contents of Vector

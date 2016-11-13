@@ -3,19 +3,15 @@
 #include "Vector.h"
 
 using namespace std;
-Vector operator+( const Vector& a, const Vector& b ) {
+
+Vector f( Vector &x, Vector& y ) {
 	cout << __PRETTY_FUNCTION__ << endl;
 
-	if ( a.size() != b.size() ) throw exception{};
+	Vector r;
 
-	Vector res(a.size());
+	r = x + y;
 
-	for ( int i=0; i<a.size(); ++i ) {
-		res[i] = a[i] + b[i];
-	}
-
-	return res;
-
+	return r;
 }
 
 int main() {
@@ -31,7 +27,8 @@ int main() {
 	cout << "v1  = " << v1 << endl;
 	cout << "v2  = " << v2 << endl;
 
-	cout << "v1 + v2 = " <<  v1+v2 << endl;
+	cout << "------------------ " << endl;
+	cout << "v1 + v2 = " <<  f(v1, v2) << endl;
 
 	cout << "END   ------------------ " << endl;
 

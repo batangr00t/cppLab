@@ -1,11 +1,14 @@
 project(tcpl)
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall")
+set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -pthread")
 
-#include_directories(  )
-
-add_executable( vec
-	main.cpp
+add_executable( VectorTest
+	VectorTest.cpp
 	Vector.cpp
+)
+
+add_executable( MessageQueueTest
+	MessageQueueTest.cpp
+	Log.cpp
 )

@@ -25,16 +25,22 @@ public:
 	// destructor
 	virtual ~Vector();
 
-	// copy constructor
-	Vector(const Vector& v);
+	// copy
+	Vector(const Vector& v);               // copy constructor
+	Vector& operator=(const Vector& v);    // copy assignment
 
-	// copy assignment
-	Vector& operator=(const Vector& v);
+	// move
+	Vector(Vector&& v);              // move constructor
+	Vector& operator=(Vector&& v);   // move assignment
 
-	double& operator[](int i);
-	const double& operator[](int i) const;
+	// index operator, const and non-const
+	double& operator[](int i);             // Vector v; v[0]
+	const double& operator[](int i) const; // const Vector& v; v[0]
 
 	int size() const;
+
+	// operator+
+	friend Vector operator+( const Vector& a, const Vector& b );
 
 	// print contents of Vector
 	friend std::ostream& operator<<( std::ostream& os, const Vector& v);
