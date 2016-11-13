@@ -17,7 +17,7 @@ public:
 	unsigned long long at( std::list<unsigned long long>::size_type nth);
 private:
 	std::list<unsigned long long> _primes;
-	bool add_if_prime(unsigned long long);
+	bool _add_if_prime(unsigned long long);
 
 };
 

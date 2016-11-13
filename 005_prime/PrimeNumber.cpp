@@ -26,7 +26,7 @@ unsigned long long PrimeNumber::at(
 		unsigned long long dedicated_prime = _primes.back() + 2;
 
 		for (auto i = current_size+1; i <= nth; i++) {
-			while ( !add_if_prime(dedicated_prime) ) {
+			while ( !_add_if_prime(dedicated_prime) ) {
 				dedicated_prime += 2;
 			}
 			std::cout << "[" << i << "] = " << dedicated_prime << std::endl;
@@ -54,7 +54,7 @@ unsigned long long PrimeNumber::at(
 	return found_prime;
 }
 
-bool PrimeNumber::add_if_prime(unsigned long long n) {
+bool PrimeNumber::_add_if_prime(unsigned long long n) {
 	unsigned long long square;
 
 	for (auto const &i : _primes) {
