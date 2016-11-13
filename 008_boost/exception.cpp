@@ -17,13 +17,15 @@ char *allocate_memory(std::size_t size) {
 	return c;
 }
 char *write_lots_of_zeros() {
+	char * c = nullptr;
 	try {
-		char *c = allocate_memory(std::numeric_limits<std::size_t>::max());
+		c = allocate_memory(std::numeric_limits<std::size_t>::max());
 		std::fill_n(c, std::numeric_limits<std::size_t>::max(), 0);
-		return c;
 	} catch (boost::exception &e) {
 		e << errmsg_info { "writing lots of zeros failed" };
 	}
+
+	return c;
 }
 
 int main() {
