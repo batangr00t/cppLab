@@ -109,8 +109,11 @@ Vector operator+( const Vector& a, const Vector& b ) {
 // print contents of Vector
 std::ostream& operator<<( std::ostream& os, const Vector& v) {
 	os << " [" << hex << ((v.sz == 0 )?0:v.elem) << "] -> elem[" << dec << v.sz << "]{";
-	for ( int i = 0; i<v.sz; ++i ) {
-		os << v.elem[i] << "|";
+	if ( v.sz > 0 ) {
+		for ( int i = 0; i<v.sz; ++i ) {
+			os << v.elem[i] << "|";
+		}
+		os << "\b";
 	}
 	os << "}";
 	return os;
