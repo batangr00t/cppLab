@@ -10,24 +10,6 @@ message("Boost_LIBRARIES = ${Boost_LIBRARIES}" )
 
 include_directories( ${Boost_INCLUDE_DIR} )
 
-###################################	
-add_executable( client
-	client.cpp
-	)
-
-target_link_libraries( client 
-	${Boost_LIBRARIES}
-	)
-
-###################################	
-add_executable( echo_client echo_client.cpp	)
-target_link_libraries( echo_client ${Boost_LIBRARIES} )
-
-###################################
-add_executable( echo_server 
-	echo_server.cpp
-	Session.cpp
-	Server.cpp
-)
-
-target_link_libraries( echo_server ${Boost_LIBRARIES} )
+add_subdirectory ( daytime )
+add_subdirectory ( echo )
+add_subdirectory ( http )
