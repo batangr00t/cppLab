@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <boost/asio.hpp>
+#include <log4cplus/loggingmacros.h>
 #include "Session.h"
 ///
 /// start
@@ -32,11 +33,17 @@ public:
 	// @brief TCP 연결을 더이상 기다리지 않는다.
 	void stop();
 private:
+	// logger
+	log4cplus::Logger _logger;
+
+	// io_service
+	boost::asio::io_service& _ioService;
+
+	// acceptor
 	boost::asio::ip::tcp::acceptor _acceptor;
-	boost::asio::ip::tcp::socket _socket;
 
 	void _doAccept();
-	void _acceptHandler(const boost::system::error_code& ec);
+	void _acceptHandler(std::shared_ptr<Session> pSession, const boost::system::error_code& ec);
 };
 
 #endif /* SERVER_H_ */
