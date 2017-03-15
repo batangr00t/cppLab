@@ -6,6 +6,8 @@
  */
 #include <vector>
 #include <iostream>
+#include <algorithm>
+
 #include "Box.h"
 
 using namespace std;
@@ -54,6 +56,15 @@ int main() {
 	Box & b1 = vec.get();
 	vec.print();
 	cout << b1  << endl;
+
+    cout << "--- 5" << endl;
+	Box arr[3]= { Box("a"), Box("b"), Box("c") };
+	vector<Box> toVec;
+	copy_n( arr, 3, toVec.end());
+
+	for ( const auto& e : toVec ) {
+	    cout << e << endl;
+	}
 
 	cout << "----------  end  -----------------" << endl;
 }
