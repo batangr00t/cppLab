@@ -77,3 +77,20 @@ char Request::control() const {
 const std::vector<char>& Request::body() const {
 	return _body;
 }
+
+//std::vector<char> _start;
+//unsigned short    _size;
+//char              _command;
+//char              _control;
+//std::vector<char> _body;
+std::ostream& operator<<( std::ostream& os, const Request& req ) {
+	os << "Request{";
+	for ( const auto& e : req._start ) os << e;
+	os << ",size:" << req._size;
+	os << ",command:" << req._command;
+	os << ",control:" << req._control << "[";
+	for ( const auto& e : req._body ) os << e;
+	os << "]}";
+
+	return os;
+}

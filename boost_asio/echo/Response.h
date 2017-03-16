@@ -10,7 +10,7 @@
 
 #include <log4cplus/loggingmacros.h>
 
-// packet format ( fixed length format )
+// packet format
 // (3) char 'CHO'    - start
 // (1) char 'H'      - header
 // (1) unsigned short - body size

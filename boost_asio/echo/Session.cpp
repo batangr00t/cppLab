@@ -7,6 +7,7 @@
 
 #include "Session.h"
 #include <boost/bind.hpp>
+#include <boost/asio/use_future.hpp>
 #include <iostream>
 
 Session::Session(boost::asio::io_service& ioService)
@@ -42,18 +43,39 @@ void Session::stop() {
 void Session::_doRead() {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 
+	_request.reset();
+	_doReadWithoutReset();
+}
+
+void Session::_doReadWithoutReset() {
+	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
+
 	auto buffer = boost::asio::buffer( _recvBuf );
 	auto handler = boost::bind( &Session::_readHandler, shared_from_this(),
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred );
 	_socket.async_read_some( buffer, handler );
+
+	// async_read with future
+//	size_t recvBytes = 0;
+//	std::future<std::size_t> read_result = boost::asio::async_read(
+//			_socket, buffer, boost::asio::use_future);
+//
+//	if ( read_result.wait_for( std::chrono::seconds(1)) ==
+//	     std::future_status::timeout ) {
+//		//_socket.cancel();
+//		_readHandler( boost::system::error_code::unspecified_bool_t )
+//	} else {
+//		size_t recvBytes = read_result.get();
+//	}
+//    timed_out = ETIMEDOUT,
 }
 
 // 읽은 데이터 parsing 후 doWrite
 void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes) {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 
-    if ( !ec )  {
+	if ( !ec )  {
     	LOG4CPLUS_DEBUG(_logger, "received " << recvBytes << " bytes");
     	for ( size_t i = 0; i<recvBytes; ++i ) std::cout << _recvBuf[i];
     	std::cout << std::endl;
@@ -66,24 +88,23 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
         //  - 정상 수행완료하면 결과 doWrite ( 실패 오류 모두 )
     	DecodeState result = _request.parse( _recvBuf.data(), recvBytes);
     	if ( result == COMPLETE ) {
+    		LOG4CPLUS_DEBUG(_logger, _request );
     		size_t sendBytes = _request.body().size();
-    		for( size_t i=0; i<sendBytes; ++i ) {
-    			_sendBuf[i] = _request.body()[i];
-    		}
+    		std::copy_n( _request.body().data(), sendBytes, _sendBuf.begin() );
     		_doWrite(sendBytes);
     	} else if ( result == INVALID ) {
-    		_request.reset();
+    		LOG4CPLUS_ERROR(_logger, "parse error. reset request. read" << result );
     		_doRead();
-    		// TODO write error packet
     	} else {
-    		_doRead();
+    		// read continue
+    		_doReadWithoutReset();
     	}
 	} else if ( ec == boost::asio::error::operation_aborted ) {
 		LOG4CPLUS_INFO(_logger, "operation_aborted. stop" );
 	} else if ( ec == boost::asio::error::eof ) {
 		LOG4CPLUS_DEBUG(_logger, "eof. stop" );
 	} else {
-		LOG4CPLUS_ERROR(_logger, "error - " << ec.message() );
+		LOG4CPLUS_ERROR(_logger, "error stop - " << ec.message() );
 	}
 }
 
@@ -105,7 +126,6 @@ void Session::_writeHandler(const boost::system::error_code& ec) {
 		LOG4CPLUS_DEBUG(_logger, "write succeed. clean request and read again.");
 
 		// write 성공하면 버퍼 request 지우고 read 의뢰
-		_request.reset();
 		_doRead();
 	} else {
 		LOG4CPLUS_ERROR(_logger, "error - " << ec.message() << " stop read.");

@@ -45,6 +45,9 @@ private:
 	// read from OS
     void _doRead();
 
+	// read from OS
+    void _doReadWithoutReset();
+
     // 오류 처리하고, 정상 수신이면 Parse
     void _readHandler(const boost::system::error_code& ec, size_t recvBytes);
 

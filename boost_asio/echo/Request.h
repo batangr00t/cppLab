@@ -60,6 +60,8 @@ private:
 
     // private method
 	DecodeState _putChar( char c );
+
+	friend std::ostream& operator<<( std::ostream& os, const Request& req );
 };
 
 #endif /* BOOST_ASIO_ECHO_CODEC_H_ */
