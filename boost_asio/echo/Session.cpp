@@ -75,9 +75,8 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
     	DecodeState result = _request.parse( _recvBuf.data(), recvBytes);
     	if ( result == COMPLETE ) {
     		LOG4CPLUS_DEBUG(_logger, _request );
-    		size_t sendBytes = _request.body().size();
-    		std::copy_n( _request.body().data(), sendBytes, _sendBuf.begin() );
-    		_doWrite(sendBytes);
+      		_sendBuffer.push_back( boost::asio::buffer(_request.body()));
+    		_doWrite();
     	} else if ( result == PARSING_ERROR ) {
     		LOG4CPLUS_ERROR(_logger, "parse error. reset request. read" << result );
     		_doRead();
@@ -95,13 +94,13 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
 }
 
 // write to OS
-void Session::_doWrite(std::size_t length) {
-	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ << " " << length << " bytes");
+void Session::_doWrite() {
+	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 
-	auto buffer = boost::asio::buffer( _sendBuf, length );
+	//auto buffer = boost::asio::buffer( _sendBuf );
 	auto handler = boost::bind( &Session::_writeHandler, shared_from_this(),
 			boost::asio::placeholders::error);
-	boost::asio::async_write( _socket, buffer, handler );
+	boost::asio::async_write( _socket, _sendBuffer, handler );
 }
 
 // write 완료 후 다시 read

@@ -38,7 +38,7 @@ private:
 	// receive buffer, send buffer
 	enum { MAX_LENGTH = 10 };
 	std::array<char, MAX_LENGTH> _recvBuf;
-	std::array<char, MAX_LENGTH> _sendBuf;
+	std::vector<boost::asio::const_buffer> _sendBuffer;
 
 	// request, response
 	Request  _request;
@@ -58,7 +58,7 @@ private:
     void _doCommand(char command);
 
     // write to OS
-    void _doWrite(std::size_t length);
+    void _doWrite();
 
     // write 완료 후 다시 read
     void _writeHandler(const boost::system::error_code& ec);
