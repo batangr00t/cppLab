@@ -26,7 +26,7 @@ enum DecodeState {
 	BODY,
 	TAIL,
 	COMPLETE,
-	INVALID
+	PARSING_ERROR
 };
 
 class Request {

@@ -8,6 +8,8 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
+#define BOOST_ASIO_ENABLE_HANDLER_TRACKING
+
 #include "Request.h"
 #include "Response.h"
 #include <log4cplus/loggingmacros.h>

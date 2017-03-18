@@ -23,12 +23,12 @@ DecodeState Request::parse(char * buf, size_t length ) {
 
 	if ( buf == nullptr ) {
 		LOG4CPLUS_ERROR(_logger, "buf is nullptr" );
-		return INVALID;
+		return PARSING_ERROR;
 	}
 
 	for ( size_t i = 0;  i<length; ++i ) {
 		result = _putChar( *(buf+i) );
-		if ( result == COMPLETE || result == INVALID ) break;
+		if ( result == COMPLETE || result == PARSING_ERROR ) break;
 	}
 	return result;
 }
@@ -53,12 +53,16 @@ DecodeState Request::_putChar( char c ) {
 
 	switch ( _decodeState ) {
 	case START :
+	case HEADER :
+	case SIZE :
+	case BODY :
+	case TAIL :
 		if ( c == 'E' ) {
 			_decodeState = COMPLETE;
 		};
 		break;
 	default:
-		_decodeState = INVALID;
+		_decodeState = PARSING_ERROR;
 	}
 
 	LOG4CPLUS_DEBUG(_logger, "putChar '" << c << "' - " << _decodeState );

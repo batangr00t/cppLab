@@ -55,20 +55,6 @@ void Session::_doReadWithoutReset() {
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred );
 	_socket.async_read_some( buffer, handler );
-
-	// async_read with future
-//	size_t recvBytes = 0;
-//	std::future<std::size_t> read_result = boost::asio::async_read(
-//			_socket, buffer, boost::asio::use_future);
-//
-//	if ( read_result.wait_for( std::chrono::seconds(1)) ==
-//	     std::future_status::timeout ) {
-//		//_socket.cancel();
-//		_readHandler( boost::system::error_code::unspecified_bool_t )
-//	} else {
-//		size_t recvBytes = read_result.get();
-//	}
-//    timed_out = ETIMEDOUT,
 }
 
 // 읽은 데이터 parsing 후 doWrite
@@ -92,7 +78,7 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
     		size_t sendBytes = _request.body().size();
     		std::copy_n( _request.body().data(), sendBytes, _sendBuf.begin() );
     		_doWrite(sendBytes);
-    	} else if ( result == INVALID ) {
+    	} else if ( result == PARSING_ERROR ) {
     		LOG4CPLUS_ERROR(_logger, "parse error. reset request. read" << result );
     		_doRead();
     	} else {

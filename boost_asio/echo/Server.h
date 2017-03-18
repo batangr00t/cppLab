@@ -8,6 +8,7 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
+#define BOOST_ASIO_ENABLE_HANDLER_TRACKING
 #include <iostream>
 #include <boost/asio.hpp>
 #include <log4cplus/loggingmacros.h>
