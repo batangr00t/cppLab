@@ -15,10 +15,10 @@
 #include <log4cplus/configurator.h>
 #include <thread>
 #include <chrono>
+#include "MyHeader.h"
 
 using boost::asio::ip::tcp;
 
-const size_t max_length = 1024;
 const size_t send_buff_length = 3;
 
 int main(int argc, char* argv[]) {
@@ -27,45 +27,54 @@ int main(int argc, char* argv[]) {
 	log4cplus::PropertyConfigurator::doConfigure("../log4cplus.conf");
 
 	try {
-		if (argc != 3) {
-			std::cerr << "Usage: blocking_tcp_echo_client <host> <port>\n";
-			return 1;
-		}
+//		if (argc != 3) {
+//			std::cerr << "Usage: blocking_tcp_echo_client <host> <port>\n";
+//			return 1;
+//		}
 
 		boost::asio::io_service io_service;
-
 		tcp::socket s(io_service);
 		tcp::resolver resolver(io_service);
-		boost::asio::connect(s, resolver.resolve( { argv[1], argv[2] }));
+		boost::asio::connect(s, resolver.resolve( {"localhost", "2333"}));
 
+		MyHeader header;
+		std::array<char, BODY_MAX_SIZE> body;
 		while (true) {
-			std::cout << "Enter message: ";
-			std::array<char, max_length> request;
-			std::cin.getline(request.data(), max_length-1);
-			size_t request_length = std::strlen( request.data() );
-			request[request_length] = 'E';
-			request_length++;
-			std::cout << "size : " << request_length << std::endl;
+			header = {};
 
-			// write
-//			boost::asio::write(s, boost::asio::buffer(request, request_length));
-			for ( size_t i=0; i<request_length; i+=send_buff_length ) {
-				size_t send_length =
-						( (i+send_buff_length) > request_length ) ?
-						request_length - i : send_buff_length;
-				boost::asio::write(s, boost::asio::buffer(request.data()+i, send_length));
-				std::this_thread::sleep_for( std::chrono::seconds(1));
-			}
+			std::cout << "Enter message: ";
+			//std::array<char, max_length> request;
+			std::cin.getline(body.data(), BODY_MAX_SIZE);
+			size_t request_length = std::strlen( body.data() );
+
+			// set header
+			header.putField( 'E', 'D', request_length);
+			std::cout << header << std::endl;
+
+			// write header
+			boost::asio::write(s, boost::asio::buffer(header));
+
+			// write body
+			boost::asio::write(s, boost::asio::buffer(body, request_length));
+//			for ( size_t i=0; i<request_length; i+=send_buff_length ) {
+//				size_t send_length =
+//						( (i+send_buff_length) > request_length ) ?
+//						request_length - i : send_buff_length;
+//				boost::asio::write(s, boost::asio::buffer(body.data()+i, send_length));
+//				std::this_thread::sleep_for( std::chrono::seconds(1));
+//			}
 
 			// reply
-			char reply[max_length];
+			std::vector<char> reply;
 
 			//TODO timeout
-			std::cout << "wait for " << request_length << "bytes" << std::endl;
-			size_t reply_length = boost::asio::read(s,
-					boost::asio::buffer(reply, request_length));
-			std::cout << "Reply is: ";
-			std::cout.write(reply, reply_length);
+			size_t reply_length =  header.size() + request_length ;
+			std::cout << "wait for " << reply_length  << "bytes" << std::endl;
+			boost::system::error_code ec;
+			size_t read_length =
+					boost::asio::read(s, boost::asio::buffer(reply, reply_length), ec);
+			std::cout << "Reply " << read_length << " : " << ec.message() ;
+			std::cout.write(reply.data(), read_length);
 			std::cout << "\n";
 		}
 	} catch (std::exception& e) {

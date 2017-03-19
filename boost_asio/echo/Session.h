@@ -36,8 +36,8 @@ private:
 	tcp::socket _socket;
 
 	// receive buffer, send buffer
-	enum { MAX_LENGTH = 10 };
-	std::array<char, MAX_LENGTH> _recvBuf;
+	enum { MAX_LENGTH = 1 };
+	std::array<char, MAX_LENGTH> _recvArray;
 	std::vector<boost::asio::const_buffer> _sendBuffer;
 
 	// request, response

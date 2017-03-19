@@ -17,11 +17,17 @@ Response::~Response() {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 }
 
-// encode, response -> sendbuf
-bool Response::encode(char * sendbuf, size_t length) {
-	return false;
+void Response::reset() {
+	header = {};
+	body.clear();
 }
 
-void Response::reset() {
-	_body.clear();
+std::ostream& operator<<( std::ostream& os, const Response& res ) {
+	os << "Response{";
+	os << res.header;
+	os << ",body[";
+	for ( const auto& e : res.body ) os << e;
+	os << "]}";
+
+	return os;
 }

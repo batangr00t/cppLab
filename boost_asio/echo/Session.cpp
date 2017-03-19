@@ -50,7 +50,7 @@ void Session::_doRead() {
 void Session::_doReadWithoutReset() {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 
-	auto buffer = boost::asio::buffer( _recvBuf );
+	auto buffer = boost::asio::buffer( _recvArray );
 	auto handler = boost::bind( &Session::_readHandler, shared_from_this(),
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred );
@@ -63,7 +63,7 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
 
 	if ( !ec )  {
     	LOG4CPLUS_DEBUG(_logger, "received " << recvBytes << " bytes");
-    	for ( size_t i = 0; i<recvBytes; ++i ) std::cout << _recvBuf[i];
+    	for ( size_t i = 0; i<recvBytes; ++i ) std::cout << _recvArray[i];
     	std::cout << std::endl;
 
         // 읽은 data를 parsed 후
@@ -72,10 +72,14 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
         //  - 파싱중 오류 발생하면 parsed buffer를 지우고 doRead
         // decode 결과 해석된 명령 수행
         //  - 정상 수행완료하면 결과 doWrite ( 실패 오류 모두 )
-    	DecodeState result = _request.parse( _recvBuf.data(), recvBytes);
+    	DecodeState result = _request.decode( _recvArray.data(), recvBytes);
     	if ( result == COMPLETE ) {
     		LOG4CPLUS_DEBUG(_logger, _request );
-      		_sendBuffer.push_back( boost::asio::buffer(_request.body()));
+    		_response.reset();
+    		_response.header.putField( 'E', 'D', _request.body().size());
+    		LOG4CPLUS_DEBUG(_logger, _response );
+      		_sendBuffer.push_back( boost::asio::buffer(_response.header) );
+      		_sendBuffer.push_back( boost::asio::buffer(_request.body()) );
     		_doWrite();
     	} else if ( result == PARSING_ERROR ) {
     		LOG4CPLUS_ERROR(_logger, "parse error. reset request. read" << result );
@@ -101,6 +105,7 @@ void Session::_doWrite() {
 	auto handler = boost::bind( &Session::_writeHandler, shared_from_this(),
 			boost::asio::placeholders::error);
 	boost::asio::async_write( _socket, _sendBuffer, handler );
+	LOG4CPLUS_TRACE(_logger, "write " << boost::asio::buffer_size(_sendBuffer) << " bytes." );
 }
 
 // write 완료 후 다시 read

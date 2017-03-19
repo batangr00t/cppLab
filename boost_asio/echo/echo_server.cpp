@@ -9,6 +9,7 @@
 #include "Server.h"
 #include <iostream>
 #include <log4cplus/configurator.h>
+#include <boost/asio.hpp>
 
 int main(int argc, char* argv[]) {
 	std::cout << "------ Start ----------" << std::endl;
@@ -22,7 +23,6 @@ int main(int argc, char* argv[]) {
 	} else {
 		port = 2333;
 	}
-
 
 	std::cout << "listen port = " << port << std::endl;
 

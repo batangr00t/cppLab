@@ -8,6 +8,7 @@
 #ifndef BOOST_ASIO_ECHO_RESPONSE_H_
 #define BOOST_ASIO_ECHO_RESPONSE_H_
 
+#include "MyHeader.h"
 #include <log4cplus/loggingmacros.h>
 
 // packet format
@@ -25,17 +26,17 @@ public:
 	virtual ~Response();
 
 	// encode, response -> sendbuf
-	bool encode(char * sendbuf, size_t length);
+	//bool encode(char * sendbuf, size_t length);
 	void reset();
 
+	MyHeader          header;
+	std::vector<char> body;
+
+	friend std::ostream& operator<<( std::ostream& os, const Response& res );
 private:
 	// logger
 	log4cplus::Logger _logger;
 
-	// send data
-	char              _status;
-	char              _control;
-	std::vector<char> _body;
 };
 
 #endif /* BOOST_ASIO_ECHO_RESPONSE_H_ */

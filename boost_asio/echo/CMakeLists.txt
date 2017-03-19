@@ -1,5 +1,6 @@
 ###################################	
-add_executable( echo_client 
+add_executable( echo_client
+	MyHeader.cpp 
 	echo_client.cpp
 	)
 	
@@ -11,6 +12,7 @@ target_link_libraries( echo_client
 ###################################
 add_executable( echo_server 
 	echo_server.cpp
+	MyHeader.cpp
 	Session.cpp
 	Server.cpp
 	Request.cpp

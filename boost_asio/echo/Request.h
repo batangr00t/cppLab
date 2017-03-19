@@ -9,25 +9,19 @@
 #define BOOST_ASIO_ECHO_CODEC_H_
 
 #include <log4cplus/loggingmacros.h>
-
-// packet format ( fixed length format )
-// (3) char 'CHO'    - start
-// (1) char 'H'      - header
-// (1) unsigned short - body size
-// (1) char          - command        'T':get time, 'B':get Big data
-// (1) char          - control        'A':ack, 'N':nak
-// (N) char []       - body
-// (1) char 'T'      - tail
+#include "MyHeader.h"
 
 enum DecodeState {
-	START,
+	START1,
+	START2,
+	START3,
 	HEADER,
-	SIZE,
 	BODY,
-	TAIL,
 	COMPLETE,
 	PARSING_ERROR
 };
+
+std::ostream& operator<< ( std::ostream& os, const DecodeState& state );
 
 class Request {
 public:
@@ -35,7 +29,7 @@ public:
 	virtual ~Request();
 
 	// decode, recvbuf -> request
-	DecodeState parse(char * buf, size_t length );
+	DecodeState decode(char * buf, size_t length );
 	DecodeState state() const;
 	void reset();
 
@@ -49,13 +43,11 @@ private:
 	log4cplus::Logger _logger;
 
 	// decode state
-	DecodeState _decodeState = START;
+	DecodeState _decodeState = START1;
+	uint8_t     _parsingError = 0;   // 0=success, else error code
 
 	// received data
-	std::vector<char> _start;
-	unsigned short    _size;
-	char              _command;
-	char              _control;
+	MyHeader         _header;
 	std::vector<char> _body;
 
     // private method
