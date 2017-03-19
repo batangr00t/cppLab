@@ -12,10 +12,12 @@
 #include <cstring>
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/algorithm/hex.hpp>
 #include <log4cplus/configurator.h>
 #include <thread>
 #include <chrono>
 #include "MyHeader.h"
+#include "Response.h"
 
 using boost::asio::ip::tcp;
 
@@ -65,17 +67,18 @@ int main(int argc, char* argv[]) {
 //			}
 
 			// reply
-			std::vector<char> reply;
 
 			//TODO timeout
 			size_t reply_length =  header.size() + request_length ;
+			std::vector<char> reply_array;
+			reply_array.resize(reply_length);
 			std::cout << "wait for " << reply_length  << "bytes" << std::endl;
 			boost::system::error_code ec;
 			size_t read_length =
-					boost::asio::read(s, boost::asio::buffer(reply, reply_length), ec);
-			std::cout << "Reply " << read_length << " : " << ec.message() ;
-			std::cout.write(reply.data(), read_length);
-			std::cout << "\n";
+					boost::asio::read(s, boost::asio::buffer(reply_array, reply_length), ec);
+			std::cout << "Reply " << read_length << " : " << ec.message() << std::endl;
+			Response response( reply_array.data(), read_length );
+			std::cout << response << std::endl;
 		}
 	} catch (std::exception& e) {
 		std::cerr << "Exception: " << e.what() << "\n";

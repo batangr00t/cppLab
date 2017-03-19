@@ -23,6 +23,7 @@
 class Response {
 public:
 	Response();
+	Response( const char * data, size_t size );
 	virtual ~Response();
 
 	// encode, response -> sendbuf

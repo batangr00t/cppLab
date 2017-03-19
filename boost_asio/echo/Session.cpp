@@ -75,12 +75,23 @@ void Session::_readHandler(const boost::system::error_code& ec, size_t recvBytes
     	DecodeState result = _request.decode( _recvArray.data(), recvBytes);
     	if ( result == COMPLETE ) {
     		LOG4CPLUS_DEBUG(_logger, _request );
-    		_response.reset();
-    		_response.header.putField( 'E', 'D', _request.body().size());
-    		LOG4CPLUS_DEBUG(_logger, _response );
-      		_sendBuffer.push_back( boost::asio::buffer(_response.header) );
-      		_sendBuffer.push_back( boost::asio::buffer(_request.body()) );
-    		_doWrite();
+    		if ( _request.getParsingError() == 0 ) {
+				_response.reset();
+				_response.header.putField( 'E', 'D', _request.body().size());
+				std::copy( _request.body().begin(),
+						_request.body().end(),
+						std::back_inserter(_response.body));
+    		} else {
+    			LOG4CPLUS_ERROR(_logger, "invalid request : " << _request.getParsingError() );
+				_response.reset();
+				_response.header.putField( 'E', 'N', 1);
+				_response.body.push_back( _request.getParsingError() );
+    		}
+
+			LOG4CPLUS_DEBUG(_logger, _response );
+			_sendBuffer.push_back( boost::asio::buffer(_response.header) );
+			_sendBuffer.push_back( boost::asio::buffer(_response.body) );
+			_doWrite();
     	} else if ( result == PARSING_ERROR ) {
     		LOG4CPLUS_ERROR(_logger, "parse error. reset request. read" << result );
     		_doRead();
@@ -115,6 +126,7 @@ void Session::_writeHandler(const boost::system::error_code& ec) {
     if ( !ec )  {
 		LOG4CPLUS_DEBUG(_logger, "write succeed. clean request and read again.");
 
+		_sendBuffer.clear();
 		// write 성공하면 버퍼 request 지우고 read 의뢰
 		_doRead();
 	} else {

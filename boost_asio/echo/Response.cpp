@@ -13,12 +13,28 @@ Response::Response()
 	reset();
 }
 
+Response::Response( const char * data, size_t size )
+	: _logger( log4cplus::Logger::getInstance("echo.Response")) {
+	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
+	reset();
+
+	if ( size >= HEADER_SIZE ) {
+		for ( size_t i=0; i<HEADER_SIZE; ++i) {
+			header.push_back( data[i] );
+		}
+
+		for ( size_t i=HEADER_SIZE; i<size; ++i) {
+			body.push_back( data[i] );
+		}
+	}
+}
+
 Response::~Response() {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 }
 
 void Response::reset() {
-	header = {};
+	header.clear();
 	body.clear();
 }
 

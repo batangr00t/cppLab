@@ -37,6 +37,7 @@ public:
 	char control() const;
 	const std::vector<char>& body() const;
 
+	uint8_t getParsingError() const;
 
 private:
 	// logger

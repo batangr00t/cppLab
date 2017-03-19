@@ -1,6 +1,7 @@
 ###################################	
 add_executable( echo_client
 	MyHeader.cpp 
+	Response.cpp
 	echo_client.cpp
 	)
 	

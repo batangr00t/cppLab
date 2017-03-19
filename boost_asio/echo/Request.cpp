@@ -38,12 +38,16 @@ DecodeState Request::state() const {
 	return _decodeState;
 }
 
+uint8_t Request::getParsingError() const {
+	return _parsingError;
+}
+
 void Request::reset() {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__ );
 	_decodeState = START1;
 	_parsingError = 0;
 
-	_header = {};
+	_header.clear();
 	_body.clear();
 }
 
