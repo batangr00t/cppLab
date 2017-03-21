@@ -1,5 +1,5 @@
 /*
- * oper.cpp
+ * cons.cpp
  *
  *  Created on: 2016. 6. 25.
  *      Author: juik
@@ -15,7 +15,11 @@ private:
 
 public:
 	Point( int a = 0, int b= 0 ): x(a), y(b) {
-		cout << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
+		clog << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
+	}
+
+	virtual ~Point() {
+		clog << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
 	}
 
 };
@@ -27,10 +31,12 @@ public:
 };
 
 int main() {
-	Circle c1;
+	Circle c1{};
 	Circle c2 = c1;
+	clog << c2.radius << endl;
 
-	cout << c2.radius << endl;
+	Circle c3{0,0};
+	clog << c3.radius << endl;
 }
 
 

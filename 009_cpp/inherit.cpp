@@ -12,15 +12,15 @@ using namespace std;
 
 class Circle {
 protected :
-	const int x;
-	const int y;
-	const double r;
+	const int _x;
+	const int _y;
+	const double _r;
 public:
-	Circle() : x(0), y(0), r(0.0) {
+	Circle() : _x(0), _y(0), _r(0.0) {
 		cout << __PRETTY_FUNCTION__ << *this << endl;
 	}
 
-	Circle(int a, int b, double r) : x(a), y(b), r(r) {
+	Circle(int a, int b, double r) : _x(a), _y(b), _r(r) {
 		cout << __PRETTY_FUNCTION__ << *this << endl;
 	}
 
@@ -30,20 +30,20 @@ public:
 
 	double getArea() {
 		cout << __PRETTY_FUNCTION__ << *this << endl;
-		return (PI * r * r );
+		return (PI * _r * _r );
 	}
 
 	friend ostream& operator<<( ostream& os, const Circle& c);
 };
 
 ostream& operator<<( ostream& os, const Circle& c) {
-	os << &c << " (" << c.x << "," << c.y << ")(" << c.r << ")";
+	os << &c << " (" << c._x << "," << c._y << ")(" << c._r << ")";
 	return os;
 }
 
 class Sphere: public Circle {
 protected:
-	const int z;
+	const int _z;
 
 public:
 //	Sphere( int a, int b, int c, double r) {
@@ -58,7 +58,7 @@ public:
 //		cout << __PRETTY_FUNCTION__ << *this << endl;
 //	}
 
-	Sphere( int a, int b, int c, double r): Circle(a,b,r), z(c) {
+	Sphere( int a, int b, int c, double r): Circle(a,b,r), _z(c) {
 		cout << __PRETTY_FUNCTION__ << *this << endl;
 	}
 
@@ -72,14 +72,14 @@ public:
 	}
 
 	double getVolume() {
-		return (4.0/3.0 * PI * r * r* r);
+		return (4.0/3.0 * PI * _r * _r * _r);
 	}
 
 	friend ostream& operator<<( ostream& os, const Sphere& s );
 };
 
 ostream& operator<<( ostream& os, const Sphere& s ) {
-	os << &s << " (" << s.x << "," << s.y << ","  << s.z << ")(" << s.r << ")";
+	os << &s << " (" << s._x << "," << s._y << ","  << s._z << ")(" << s._r << ")";
 	return os;
 }
 

@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8.4 )
 project(cpp)
 
 #set(CMAKE_VERBOSE_MAKEFILE ON)
-set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall")
+set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wshadow")
 
 add_executable( main main.cpp )
 add_executable( class class.cpp )

@@ -14,7 +14,8 @@ int& add( int& a, int b ) {
 	return a;
 }
 
-char* fun() { return "Hellow"; }
+// dangerous code
+char* fun() { return "Hello"; }
 
 int main() {
 	cout << "------- start --- " << endl;
