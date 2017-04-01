@@ -10,6 +10,7 @@ message("Boost_LIBRARIES = ${Boost_LIBRARIES}" )
 
 include_directories( ${Boost_INCLUDE_DIR} )
 
+############## 
 add_executable( main
 	main.cpp
 	printer.cpp
@@ -18,7 +19,17 @@ add_executable( main
 target_link_libraries( main 
 	${Boost_LIBRARIES}
 	)
+
+############## 	
+add_executable( dt
+	dt.cpp
+	)
 	
+target_link_libraries( dt
+	${Boost_LIBRARIES}
+	)
+
+############## 
 add_executable( st
 	st.cpp
 	)
