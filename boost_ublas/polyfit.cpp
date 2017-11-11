@@ -94,6 +94,7 @@ int main() {
 	cout << ",    y(2) = " << a(0) + a(1)*2 + a(2)*2*2;
 	cout << ",    y(3) = " << a(0) + a(1)*3 + a(2)*3*3 << endl;
 
+	cout << "==== run 10 times" << endl;
 	for ( int cnt = 0; cnt < 10; ++ cnt  ) {
 		cout << endl;
 		cout << "[" << cnt << "] t = " << t << endl;
@@ -105,7 +106,7 @@ int main() {
 		ublas::swap_rows( pm, a); // a <- PY
 		ublas::inplace_solve( LU, a, ublas::unit_lower_tag()); // a <- z : Lz = PY
 		ublas::inplace_solve( LU, a, ublas::upper_tag());      // a <- x : Ux = z
-		ublas::lu_substitute( LU, pm, a );
+		cout << "polynomial coefficient = " << a << endl;
 		cout << "[" << cnt << "] ";
 		for ( double x : t ) {
 			cout << "y(" << x << ") = " << polyval(a, x) << ", ";
@@ -126,40 +127,5 @@ int main() {
 		}
 	}
 
-	// continuous value y
-	cout << "=========== plot data continuous ============ " << endl;
-	cout << "y, polyval t-1, polyval t, lastsame t-1, lastsame t, lastsame t-1 lp, lowpass, lp t-1, lp t" << endl;
-	for ( unsigned i = 0; i < 100; ++i ) {
-		// generate y
-		for (unsigned i = 1; i < y.size(); ++i) y(i-1) = y(i);
-		y(y.size()-1) += dis_y(gen);
-		cout << y(N-1);
-		static double lpv = y(N-1);
-
-		// polyval t-1, t
-		ublas::vector<double> tmp_y( y );
-		ublas::vector<double> a( prod( trans(X), tmp_y ) );
-		ublas::lu_substitute( LU, pm, a );
-		cout << "," << polyval(a, t(N-2)) << "," << polyval(a, t(N-1));
-
-		// tmp y, last two element are same value
-		tmp_y = y;
-        for (unsigned i = 1; i < tmp_y.size(); ++i) tmp_y(i-1) = tmp_y(i);
-		a = prod( trans(X), tmp_y );
-		ublas::lu_substitute( LU, pm, a );
-		cout << "," << polyval(a, t(N-2)) << "," << polyval(a, t(N-1));
-		lpv = lpv/2 + polyval(a, t(N-2))/2;
-		cout << "," << lpv;
-
-		// low-pass filter, alpha = 0.5
-		tmp_y(0) = y(0);
-		for (unsigned i = 1; i < tmp_y.size(); ++i) tmp_y(i) = y(i-1)/2 + y(i)/2;
-		a = prod( trans(X), tmp_y );
-		ublas::lu_substitute( LU, pm, a );
-		cout << "," << tmp_y(N-1) << "," << polyval(a, t(N-2)) << "," << polyval(a, t(N-1));
-
-		cout << endl;
-
-	}
 	cout << "==== END " << endl;
 }

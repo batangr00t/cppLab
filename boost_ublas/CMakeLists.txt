@@ -36,3 +36,12 @@ add_executable ( polyfit
 target_link_libraries( polyfit
 	${Boost_LIBRARIES}
 ) 
+
+#### smoothing
+add_executable ( smoothing
+	smoothing.cpp
+)
+
+target_link_libraries( smoothing
+	${Boost_LIBRARIES}
+) 
