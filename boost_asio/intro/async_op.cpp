@@ -36,7 +36,7 @@ int main() {
 	boost::asio::ip::tcp::resolver::query q("localhost", "2333");
 	boost::asio::ip::tcp::resolver::iterator it = resolver.resolve(q );
 
-//	socket.async_connect( boost::asio::ip::tcp::v4(), connect_handler);
+	//socket.async_connect( boost::asio::ip::tcp::v4(), connect_handler);
 
 	// A call to io_service::run() blocks
 	// while there are unfinished asynchronous operations,
