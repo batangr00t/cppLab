@@ -17,7 +17,7 @@ int main() {
 
 	PrefixCalculator calc;
 
-	regex token_re("[-+*/()]|" + Token::OPERAND_RE);
+	regex token_re( Token::OPERATOR_RE + "|" + Token::OPERAND_RE);
 	auto rend = sregex_token_iterator();
 
 	for ( string line; getline( cin, line); ) {
