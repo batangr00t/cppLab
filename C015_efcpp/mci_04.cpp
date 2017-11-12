@@ -29,9 +29,15 @@ int main() {
 	auto x = theAnswer;
 	auto y = &theAnswer;
 
+	cout << "=========== not recommend " << endl;
+	cout << typeid(x).name() << endl;
+	cout << typeid(x).name() << endl;
+
+	cout << "=========== better " << endl;
 	cout << type_id_with_cvr<decltype(x)>().pretty_name() << endl;
 	cout << type_id_with_cvr<decltype(y)>().pretty_name() << endl;
 
+	cout << "=========== good2 " << endl;
 	const auto vw = createVec();
 	if ( !vw.empty() ) {
 		f(&vw[0]);
