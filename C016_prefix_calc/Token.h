@@ -10,6 +10,7 @@
 
 #include <string>
 #include <iostream>
+#include <functional>
 
 class Token {
 public:
@@ -17,6 +18,7 @@ public:
 	virtual ~Token();
 	const std::string name;
 	float value;
+	std::string type;
 
 	static const std::string OPERATOR_RE;
 	static const std::string OPERAND_RE;

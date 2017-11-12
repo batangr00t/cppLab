@@ -25,12 +25,9 @@ int main() {
 		      b!=sregex_token_iterator();
 		      b++ ) {
 			Token token(*b);
-			std::cout << token;
 			calc.eval( token );
-
+			cout << calc << endl;
 		}
-		cout << endl;
-		cout << calc << endl;
 	}
 
 	cout << "----  end  ----" << endl;
