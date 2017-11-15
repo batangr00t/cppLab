@@ -8,18 +8,29 @@
 #ifndef C016_PREFIX_CALC_TOKEN_H_
 #define C016_PREFIX_CALC_TOKEN_H_
 
-#include <string>
 #include <iostream>
-#include <functional>
+
+enum class TokenType { OPERATOR, OPERAND, NONE };
 
 class Token {
 public:
-	Token(const std::string& n);
+	Token();
+	Token(const std::string&);
 	virtual ~Token();
-	const std::string name;
-	float value;
-	std::string type;
 
+	// member variables
+	TokenType type = TokenType::NONE;
+	char opr       = ' ';
+	double opd     = 0.0f;
+
+	// member operators
+	Token& operator=( const Token& );
+	Token& operator+=( const Token& );
+	Token& operator-=( const Token& );
+	Token& operator*=( const Token& );
+	Token& operator/=( const Token& );
+
+	// constants
 	static const std::string OPERATOR_RE;
 	static const std::string OPERAND_RE;
 
