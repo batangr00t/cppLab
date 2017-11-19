@@ -10,30 +10,41 @@
 using namespace std;
 
 Calculator::Calculator() :
+	_logger( log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("Calculator"))),
 	_token_re( Token::OPERATOR_RE + "|" + Token::OPERAND_RE) {
-	cerr << __LINE__ << __PRETTY_FUNCTION__ << endl;
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
 }
 
 Calculator::~Calculator() {
-	cerr << __LINE__ << __PRETTY_FUNCTION__ << endl;
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
 }
 
 double Calculator::eval(const std::string& expr) {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
+
+	// copy input string
+	_line = expr;
+
+	// parse and compute
+	switch( mode ) {
+	case CalMode::PREFIX:  _prefixTokenize( expr );	 break;
+	case CalMode::INFIX:   _infixTokenize( expr );	 break;
+	case CalMode::POSTFIX: _postfixTokenize( expr ); break;
+	}
+	_postfixCalc();
+
+	// check result
 	double result;
-
-	_tokenize( expr );
-	_prefixCalcRight();
-
 	if ( _result.size() == 1 ) {
 		Token token = _result.front();
-		if ( token.type == TokenType::OPERAND ) {
+		if ( token.isOperand() ) {
 			result = token.opd;
 		} else {
-			cerr << __LINE__ << __PRETTY_FUNCTION__ << " result is not OPERAND" << endl;
+			LOG4CPLUS_ERROR( _logger, "result is not OPERAND");
 			result = nan("");
 		}
 	} else {
-		cerr << __LINE__ << __PRETTY_FUNCTION__ << " result stack's size is not one" << endl;
+		LOG4CPLUS_ERROR( _logger, "result stack's size is not one" );
 		result = nan("");
 	}
 
@@ -41,101 +52,190 @@ double Calculator::eval(const std::string& expr) {
 }
 
 void Calculator::reset() {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
+
+	_operators.clear();
 	_tokens.clear();
 	_result.clear();
 }
 
-// tokenize : expr => _tokens
-void Calculator::_tokenize(const std::string& expr) {
-	cout << __LINE__ << __PRETTY_FUNCTION__ << endl;
+//prefix  expr => postfix token without '(', ')'
+void Calculator::_prefixTokenize(const std::string& expr) {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
 
 	// clean tokens
 	_tokens.clear();
 
 	// tokenize
-	for ( auto b = sregex_token_iterator( expr.begin(), expr.end(), _token_re );
-	      b!=sregex_token_iterator();
-	      b++ ) {
-		_tokens.push_back( Token(*b) );
-		cout << *this << endl;
-	}
-}
-
-// prefix calculator : _tokens => _result
-void Calculator::_prefixCalcRight() {
-	cout << __LINE__ << __PRETTY_FUNCTION__ << endl;
-
-	for ( auto it = _tokens.crbegin(); it != _tokens.crend(); ++it ) {
-		if ( it->type == TokenType::OPERATOR ) {
-			switch( it->opr ) {
-			case ')' :
-				_result.push_front( *it );
-				break;
-			case '(':
-				// skip
-				break;
-			default: // compute
-				_result.push_front( _compute( *it ) );
-				break;
+	for ( auto it = sregex_token_iterator( expr.begin(), expr.end(), _token_re );
+	      it != sregex_token_iterator();
+	      ++it ) {
+		Token token(*it);
+		if ( token.opr == '(' ) {
+			//skip
+		} else if ( token.opr == ')' ) {
+			_operators.pop_back();
+			if ( !_operators.empty() && ++(_operators.back().count) > 1 ) {
+				_tokens.push_back( _operators.back() );
 			}
-		} else if ( it->type == TokenType::OPERAND ) {
-			_result.push_front( *it );
+		} else if ( token.isOperator() ) {
+			_operators.push_back( token );
+		} else { // operand
+			_tokens.push_back( token );
+			if ( !_operators.empty() ) {
+				_operators.back().count++;
+				if ( _operators.back().count > 1 ) {
+					_tokens.push_back( _operators.back() );
+				}
+			}
 		}
-		cout << *this << endl;
+
+		LOG4CPLUS_INFO( _logger, *this );
 	}
 }
 
-void Calculator::_prefixCalcLeft() {
+//infix  expr => postfix token without '(', ')'
+void Calculator::_infixTokenize(const std::string& expr) {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
 
+	// clean tokens
+	_tokens.clear();
+
+	// tokenize
+	for ( auto it = sregex_token_iterator( expr.begin(), expr.end(), _token_re );
+	      it!=sregex_token_iterator();
+	      it++ ) {
+		Token token(*it);
+		if ( token.opr == '(' ) {
+			_operators.push_back( token );
+		} else if ( token.opr == ')' ) {
+			while ( !_operators.empty() && _operators.back().opr != '(' ) {
+				_tokens.push_back( _operators.back() );
+				_operators.pop_back();
+			}
+			_operators.pop_back();
+		} else if ( token.isOperator() ) {
+			while ( !_operators.empty() && _operators.back().opr != '(' &&
+					_operators.back().isHigherOperator(token) ) {
+				_tokens.push_back( _operators.back() );
+				_operators.pop_back();
+			}
+			_operators.push_back( token );
+		} else { // operand
+			_tokens.push_back( token );
+		}
+		LOG4CPLUS_INFO( _logger, *this );
+	}
+
+	// push left operators
+	while ( !_operators.empty() ) {
+		_tokens.push_back( _operators.back() );
+		_operators.pop_back();
+	}
 }
 
-Token Calculator::_compute( const Token& oprToken ) {
-	cout << __LINE__ << __PRETTY_FUNCTION__ << endl;
+//postfix  expr => postfix token without '(', ')'
+void Calculator::_postfixTokenize(const std::string& expr) {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
 
+	// clean tokens
+	_tokens.clear();
+
+	// tokenize
+	for ( auto it = sregex_token_iterator( expr.begin(), expr.end(), _token_re );
+	      it!=sregex_token_iterator();
+	      it++ ) {
+		Token token(*it);
+		if ( token.opr == '(' ) {
+			//skip
+		} else if ( token.opr == ')' ) {
+			//skip
+		} else { // operand
+			_tokens.push_back( token );
+		}
+		LOG4CPLUS_INFO( _logger, *this );
+	}
+}
+
+// postfix calculator : _tokens => _result, calculate from begin to end
+void Calculator::_postfixCalc() {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
+
+	LOG4CPLUS_INFO( _logger, *this );
+	for ( auto it = _tokens.cbegin(); it != _tokens.cend(); ++it ) {
+		if ( it->isOperator() ) {
+			_result.push_back( _postfixCompute( *it ) );
+		} else if ( it->isOperand() ) {
+			_result.push_back( *it );
+		}
+		_tokens.pop_front();
+		LOG4CPLUS_INFO( _logger, *this );
+	}
+}
+
+// first pop rhs
+Token Calculator::_postfixCompute( const Token& oprToken ) {
+	LOG4CPLUS_DEBUG( _logger, __PRETTY_FUNCTION__ );
+	Token lhs;
+	Token rhs;
+
+	// rhs
 	if ( _result.empty() ) {
-		cerr << "incomplete expr : _result are empty";
+		LOG4CPLUS_ERROR( _logger, "incomplete expr : _result are empty");
 		return Token();
+	} else {
+		rhs = _result.back();
+		_result.pop_back();
 	}
 
-	deque<Token> params;
-	auto& param = _result.front();
-	while ( param.opr != ')' && !_result.empty() ) {
-		params.push_back( param );
-		_result.pop_front();
-		param = _result.front();
-		cout << *this << endl;
-	}
-	if ( !_result.empty() ) _result.pop_front(); // remove ')'
-
-	if ( params.size() < 2 ) {
-		cerr << "incomplete expr : params are empty or one";
+	// lhs
+	if ( _result.empty() ) {
+		LOG4CPLUS_ERROR( _logger, "incomplete expr : _result are empty");
 		return Token();
+	} else {
+		lhs = _result.back();
+		_result.pop_back();
 	}
-
-	Token computed = params.front();
-	cout << "computed = " << computed << endl;
-	params.pop_front();
 
 	switch ( oprToken.opr ) {
-	case '+' : for ( const auto& p : params ) computed += p; break;
-	case '-' : for ( const auto& p : params ) computed -= p; break;
-	case '*' : for ( const auto& p : params ) computed *= p; break;
-	case '/' : for ( const auto& p : params ) computed /= p; break;
-	default  : computed = Token(); break;
+	case '+' : lhs += rhs; break;
+	case '-' : lhs -= rhs; break;
+	case '*' : lhs *= rhs; break;
+	case '/' : lhs /= rhs; break;
+	default  : lhs = Token(); break;
 	}
 
-	return computed;
+	return lhs;
+}
+
+std::ostream& operator<<( std::ostream& os, const CalMode& c) {
+	switch( c ) {
+	case CalMode::PREFIX:  os << "PREFIX";  break;
+	case CalMode::INFIX:   os << "INFIX";   break;
+	case CalMode::POSTFIX: os << "POSTFIX"; break;
+	}
+
+	return os;
 }
 
 std::ostream& operator<<( std::ostream& os, const Calculator& c ) {
-	os << " _tokens : ";
+	os << endl;
+	os << "CalMode   : " << c.mode << endl;
+	os << "input line: \"" << c._line << "\"" << endl;
+	os << "operTokens: |";
+	for ( const auto& e : c._operators ) {
+		os << e;
+	}
+	os << "|" << endl;
+	os << "tokens    : |";
 	for ( const auto& e : c._tokens ) {
 		os << e;
 	}
-	os << endl;
-	os << " _result : ";
+	os << "|" << endl;
+	os << "result    : |";
 	for ( const auto& e : c._result ) {
 		os << e;
 	}
+	os << "|";
 	return os;
 }
