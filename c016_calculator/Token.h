@@ -5,8 +5,8 @@
  *      Author: cho
  */
 
-#ifndef C016_PREFIX_CALC_TOKEN_H_
-#define C016_PREFIX_CALC_TOKEN_H_
+#ifndef C016_CALCULATOR_TOKEN_H_
+#define C016_CALCULATOR_TOKEN_H_
 
 #include <iostream>
 #include <log4cplus/logger.h>
@@ -58,4 +58,4 @@ private:
 	log4cplus::Logger _logger;
 };
 
-#endif /* C016_PREFIX_CALC_TOKEN_H_ */
+#endif /* C016_CALCULATOR_TOKEN_H_ */

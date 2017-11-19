@@ -8,8 +8,9 @@
 #include <iostream>
 #include <log4cplus/configurator.h>
 #include <log4cplus/loggingmacros.h>
-#include "Calculator.h"
-#include "Token.h"
+
+#include "../c016_calculator/Calculator.h"
+#include "../c016_calculator/Token.h"
 
 using namespace std;
 

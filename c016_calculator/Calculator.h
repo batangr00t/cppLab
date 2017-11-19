@@ -5,15 +5,16 @@
  *      Author: cho
  */
 
-#ifndef C016_PREFIX_CALC_CALCULATOR_H_
-#define C016_PREFIX_CALC_CALCULATOR_H_
+#ifndef C016_CALCULATOR_CALCULATOR_H_
+#define C016_CALCULATOR_CALCULATOR_H_
 
 #include <deque>
 #include <list>
 #include <regex>
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
-#include "Token.h"
+
+#include "../c016_calculator/Token.h"
 
 enum class CalMode { PREFIX, INFIX, POSTFIX };
 std::ostream& operator<<( std::ostream& os, const CalMode& c);
@@ -53,4 +54,4 @@ private:
 
 };
 
-#endif /* C016_PREFIX_CALC_CALCULATOR_H_ */
+#endif /* C016_CALCULATOR_CALCULATOR_H_ */
