@@ -33,3 +33,6 @@ add_executable( constex
 	constex.cpp )
 add_executable( regex 
 	regex.cpp )	
+	
+add_executable( initializer_list 
+	initializer_list.cpp )		
