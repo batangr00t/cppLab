@@ -21,7 +21,7 @@ std::ostream& operator<<( std::ostream& os, const CalMode& c);
 
 class Calculator {
 public:
-	CalMode mode = CalMode::PREFIX;
+	CalMode mode = CalMode::INFIX;
 
 	Calculator();
 	virtual ~Calculator();
@@ -41,10 +41,14 @@ private:
 	std::deque<Token> _result;
 	std::regex _token_re;
 
-	// tokenize : expr => _tokens  without '(', ')'
-	void _prefixTokenize(const std::string& expr);  // prefix  expr => postfix token
-	void _infixTokenize(const std::string& expr);   // infix   expr => postfix token
-	void _postfixTokenize(const std::string& expr); // postfix expr => postfix token
+	// prefix  expr => postfix token
+	void _prefixTokenize(const std::string& expr);
+
+	// infix   expr => postfix token
+	void _infixTokenize(const std::string& expr);
+
+	// postfix expr => postfix token
+	void _postfixTokenize(const std::string& expr);
 
 	// calculator : _tokens => _result
 	void _postfixCalc();      // postfix => result

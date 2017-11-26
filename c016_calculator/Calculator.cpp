@@ -223,7 +223,7 @@ std::ostream& operator<<( std::ostream& os, const Calculator& c ) {
 	os << endl;
 	os << "CalMode   : " << c.mode << endl;
 	os << "input line: \"" << c._line << "\"" << endl;
-	os << "operTokens: |";
+	os << "operators : |";
 	for ( const auto& e : c._operators ) {
 		os << e;
 	}
