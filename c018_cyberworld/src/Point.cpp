@@ -3,13 +3,26 @@
 //
 
 #include "Point.h"
-#include <boost/log/trivial.hpp>
 
+Point::Point() : Point(0,0) {
+	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
+}
 
-Point::Point() {
-    BOOST_LOG_TRIVIAL( info ) << __PRETTY_FUNCTION__;
+Point::Point(double x, double y) :
+	logger( log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("Point"))),
+	x(x), y(y){
+	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
 }
 
 Point::~Point() {
-    BOOST_LOG_TRIVIAL( info ) << __PRETTY_FUNCTION__;
+	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
+}
+
+bool operator<( const Point& lhs, const Point& rhs ) {
+	return std::tie(lhs.x, lhs.y) < std::tie(rhs.x, rhs.y);
+}
+
+std::ostream& operator<<( std::ostream& os, const Point& p) {
+	os << "(" << p.x << "," << p.y << ")";
+	return os;
 }

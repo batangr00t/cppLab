@@ -12,22 +12,32 @@ World &World::getInstance() {
     return world;
 }
 
-World::World() : _point_count(0) {
-    BOOST_LOG_TRIVIAL( info ) << __PRETTY_FUNCTION__ ;
+World::World() :
+	logger( log4cplus::Logger::getInstance( LOG4CPLUS_TEXT("World"))) {
+	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
 };
 
 World::~World() {
-    BOOST_LOG_TRIVIAL( info ) << __PRETTY_FUNCTION__ ;
+	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
 };
 
 uint32_t World::get_point_count() const {
-    return _point_count;
+    return _points.size();
 }
 
-void World::inc_point_count() {
+void World::add_point(unsigned int n) {
     lock_guard<mutex> lg( _m);
 
-    _point_count++;
+    for ( unsigned int i = 0; i<n; ++i ) {
+    	_points.emplace(i,i);
+    }
 }
 
-
+ostream& operator<<( std::ostream& os, const World& world) {
+	os << "World{" << world.get_point_count() << ":";
+	for ( const auto& e : world._points ) {
+		os << e;
+	}
+	os << "}";
+	return os;
+}
