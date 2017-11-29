@@ -1,9 +1,3 @@
-/*
- * map.cpp
- *
- *  Created on: 2016. 6. 28.
- *      Author: LG CNS
- */
 #include <iostream>
 #include <map>
 #include <memory>
