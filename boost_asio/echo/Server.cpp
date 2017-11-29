@@ -1,9 +1,3 @@
-/*
- * Server.cpp
- *
- *  Created on: 2017. 3. 8.
- *      Author: LG CNS
- */
 
 #include "Server.h"
 #include "Session.h"

@@ -1,10 +1,3 @@
-/*
- * Session.h
- *
- *  Created on: 2017. 3. 8.
- *      Author: LG CNS
- */
-
 #ifndef SESSION_H_
 #define SESSION_H_
 

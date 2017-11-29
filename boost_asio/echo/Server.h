@@ -1,10 +1,3 @@
-/*
- * Server.h
- *
- *  Created on: 2017. 3. 8.
- *      Author: LG CNS
- */
-
 #ifndef SERVER_H_
 #define SERVER_H_
 

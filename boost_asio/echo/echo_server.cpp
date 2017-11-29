@@ -1,10 +1,3 @@
-/*
- * echo_server.cpp
- *
- *  Created on: 2017. 3. 8.
- *      Author: LG CNS
- */
-
 #include "Session.h"
 #include "Server.h"
 #include <iostream>
