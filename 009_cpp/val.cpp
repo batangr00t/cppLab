@@ -1,10 +1,3 @@
-/*
- * val.cpp
- *
- *  Created on: 2016. 6. 27.
- *      Author: LG CNS
- */
-
 #include <iostream>
 
 using namespace std;

@@ -1,10 +1,3 @@
-/*
- * Acla.h
- *
- *  Created on: 2016. 6. 22.
- *      Author: LG CNS
- */
-
 #ifndef _CPP_ACLA_H_
 #define _CPP_ACLA_H_
 

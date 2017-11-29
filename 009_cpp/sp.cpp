@@ -1,9 +1,4 @@
-/*
- * sp.cpp
- *
- *  Created on: 2016. 6. 29.
- *      Author: LG CNS
- */
+
 #include <iostream>
 #include <memory>
 

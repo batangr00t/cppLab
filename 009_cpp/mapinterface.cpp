@@ -1,10 +1,3 @@
-/*
- * val.cpp
- *
- *  Created on: 2016. 6. 27.
- *      Author: LG CNS
- */
-
 #include <iostream>
 #include <functional>
 #include <memory>
@@ -12,12 +5,12 @@
 
 using namespace std;
 
-class Box {
+class Box2 {
 public:
-	Box():i(0) {
+	Box2():i(0) {
 		cout << this << " : " << __PRETTY_FUNCTION__ << endl;
 	}
-	~Box() {
+	~Box2() {
 		cout << this << " : " << __PRETTY_FUNCTION__ << endl;
 	}
 	int i;
@@ -25,14 +18,14 @@ public:
 
 class A {
 public:
-	Box* pBox;
+	Box2* pBox;
 	int n;
 };
 
 int main() {
 	cout << "------- start --- " << endl;
 
-	Box box;
+	Box2 box;
 
 
 

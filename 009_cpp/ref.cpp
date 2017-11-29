@@ -1,9 +1,3 @@
-/*
- * ref.cpp
- *
- *  Created on: 2016. 6. 24.
- *      Author: LG CNS
- */
 #include <iostream>
 #include <vector>
 using namespace std;
