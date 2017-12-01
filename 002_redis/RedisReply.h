@@ -20,11 +20,10 @@ public:
 	long long getInteger();
 	BinString getBinString();
 	vector<BinString> getArray();
-	static const string& getTypeName( int );
+	static const string getTypeName( int );
 	friend ostream& operator<< ( ostream& os, const RedisReply& );
 private:
-	static log4cplus::Logger logger;
-	static string typeNames[];
+	log4cplus::Logger _logger;
 	redisReply* _reply;
 
 };

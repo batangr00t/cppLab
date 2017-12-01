@@ -11,9 +11,9 @@
 
 using namespace std;
 
-log4cplus::Logger logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main"));
-
 int main(int argc, char *argv[]) {
+	log4cplus::Logger logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main"));
+
 	cout << "---------------- start program ------------" << endl;
 	log4cplus::initialize();
 	log4cplus::PropertyConfigurator::doConfigure("../log4cplus.conf");
@@ -68,6 +68,6 @@ int main(int argc, char *argv[]) {
 	cout << "3. ------ free context" << endl;
 	redisFree(c);
 
-	cout << "---------------- end    program ------------" << endl;
+	cout << "---------------- end   program ------------" << endl;
 	return 0;
 }

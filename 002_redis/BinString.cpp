@@ -8,18 +8,22 @@
 #include <iomanip>
 #include "BinString.h"
 
-log4cplus::Logger BinString::logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("BinString"));
+BinString::BinString() : BinString(0,  "") {
+	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
+}
 
-BinString::BinString(const BinString& s) : _len(s._len), _str(s._str) {
-	LOG4CPLUS_TRACE(logger, this << ":" << __PRETTY_FUNCTION__ );
+BinString::BinString(const BinString& s) :
+	_logger(log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("BinString"))),
+	_len(s._len), _str(s._str) {
+	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
 }
 
 BinString::BinString(const size_t len,  const char* str) : _len(len), _str(str) {
-	LOG4CPLUS_TRACE(logger, this << ":" << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
 }
 
 BinString::~BinString() {
-	LOG4CPLUS_TRACE(logger, this << ":" << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
 }
 
 string BinString::castString() const {

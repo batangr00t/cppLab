@@ -16,7 +16,7 @@ using namespace std;
 
 class BinString {
 public:
-	BinString() = delete;
+	BinString();
 	BinString(const BinString&);
 	BinString(const size_t,  const char *);
 	virtual ~BinString();
@@ -28,7 +28,7 @@ public:
 
 	friend ostream& operator<< ( ostream& os, const BinString& );
 private:
-	static log4cplus::Logger logger;
+	log4cplus::Logger _logger;
 	const size_t _len;           // read only member variable.
 	const char * const _str;     // read only member variable. and const pointer.
 };
