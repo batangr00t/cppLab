@@ -21,9 +21,6 @@ void callback(redisAsyncContext *ac, void *r, void *privdata) {
 	RedisReply reply( r );
     cout << reply << endl;
 
-//    LOG4CPLUS_DEBUG(logger, "redisAsyncDisconnect" );
-//    /* Disconnect after receiving the reply to GET */
-//    redisAsyncDisconnect(ac);
 }
 
 void connectCallback(const redisAsyncContext *ac, int status) {
@@ -32,7 +29,7 @@ void connectCallback(const redisAsyncContext *ac, int status) {
     	LOG4CPLUS_ERROR(logger, "Error : " << ( (ac==nullptr) ? "nullptr" : ac->errstr ));
         return;
     }
-    printf("Connected...\n");
+    LOG4CPLUS_INFO( logger, "Connected..." );
 }
 
 void disconnectCallback(const redisAsyncContext *ac, int status) {
@@ -70,10 +67,23 @@ int main() {
     redisAsyncSetDisconnectCallback(ac,disconnectCallback);
 
     LOG4CPLUS_DEBUG(logger, "set" );
-    redisAsyncCommand(ac, callback, NULL, "SET key %s", "good");
+    redisAsyncCommand(ac, callback, NULL, "SET a/a.f32 %s", "1.1");
+    redisAsyncCommand(ac, callback, NULL, "SET b/b.f32 %s", "2.2");
 
     LOG4CPLUS_DEBUG(logger, "get" );
-    redisAsyncCommand(ac, callback, (char*)"end-1", "GET key");
+    redisAsyncCommand(ac, callback, (char*)"end-1", "GET a/a.f32");
+
+    LOG4CPLUS_DEBUG(logger, "get" );
+    redisAsyncCommand(ac, callback, NULL, "GET b/b.f32");
+
+    for ( int i = 0; i<10000; ++i ) {
+		LOG4CPLUS_DEBUG(logger, "mget" );
+		redisAsyncCommand(ac, callback, NULL, "MGET a/a.f32 b/b.f32");
+    }
+
+	LOG4CPLUS_DEBUG(logger, "redisAsyncDisconnect" );
+	/* Disconnect after receiving the reply to GET */
+	redisAsyncDisconnect(ac);
 
     LOG4CPLUS_DEBUG(logger, "event_base_dispatch" );
     event_base_dispatch(base);

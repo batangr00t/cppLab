@@ -35,7 +35,7 @@ BinString RedisReply::getBinString() {
 		LOG4CPLUS_ERROR(_logger, "_reply is nullptr" );
 		return BinString();
 	} else {
-		return BinString( _reply->len, _reply->str );
+		return BinString( _reply->str, _reply->len );
 	}
 }
 
@@ -49,7 +49,7 @@ vector<BinString> RedisReply::getArray() {
 		array.reserve(_reply->elements);
 		for ( size_t i=0; i<_reply->elements; i++ ) {
 			LOG4CPLUS_TRACE(_logger, "push_back[" << i << "]");
-			array.push_back( BinString(_reply->element[i]->len, _reply->element[i]->str ) );
+			array.push_back( BinString(_reply->element[i]->str,_reply->element[i]->len) );
 		}
 		return array;
 	}
@@ -77,13 +77,15 @@ ostream& operator<< ( ostream& os, const RedisReply &reply ) {
 		<< "type:" << pr->type << "(" << RedisReply::getTypeName(pr->type) << "), "
 		<< "integer:" << pr->integer << ", "
 		<< "{len:" << pr->len << ", "
-		//<< "str:" << string(pr->str, (pr->len > 20) ? 20 : pr->len ) << ", "
-		<< "str:\"" << string(pr->str, pr->len ) << "\"}, "
-		<< "{#elements:" << pr->elements << ", {";
-		for ( size_t i=0; i<pr->elements; i++) {
-			os << "\"" << pr->element[i]->str << "\", ";
+		<< "str:\"" << string(pr->str, pr->len ) << "\"}";
+		if ( pr->type ==  REDIS_REPLY_ARRAY ) {
+			os <<"{#elements:" << pr->elements ;
+			for ( size_t i=0; i<pr->elements; i++) {
+				os << RedisReply( pr->element[i] );
+			}
+			os << "}";
 		}
-		os << "}}}";
+		os << "}";
 	}
 
 	return os;

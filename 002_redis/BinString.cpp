@@ -8,17 +8,17 @@
 #include <iomanip>
 #include "BinString.h"
 
-BinString::BinString() : BinString(0,  "") {
+BinString::BinString() : BinString("", 0) {
 	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
 }
 
 BinString::BinString(const BinString& s) :
 	_logger(log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("BinString"))),
-	_len(s._len), _str(s._str) {
+	 _str(s._str), _len(s._len) {
 	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
 }
 
-BinString::BinString(const size_t len,  const char* str) : _len(len), _str(str) {
+BinString::BinString(const char* str, const size_t len) : _str(str), _len(len) {
 	LOG4CPLUS_TRACE(_logger, this << ":" << __PRETTY_FUNCTION__ );
 }
 

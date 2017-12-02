@@ -18,7 +18,7 @@ class BinString {
 public:
 	BinString();
 	BinString(const BinString&);
-	BinString(const size_t,  const char *);
+	BinString(const char *, const size_t);
 	virtual ~BinString();
 	string castString() const;
 	template <typename T>
@@ -29,8 +29,8 @@ public:
 	friend ostream& operator<< ( ostream& os, const BinString& );
 private:
 	log4cplus::Logger _logger;
-	const size_t _len;           // read only member variable.
 	const char * const _str;     // read only member variable. and const pointer.
+	const size_t _len;           // read only member variable.
 };
 
 #endif /* CPPLAB_REDIS_BINSTRING_H_ */
