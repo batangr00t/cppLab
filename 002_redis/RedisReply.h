@@ -13,13 +13,12 @@ using namespace std;
 class RedisReply {
 public:
 	RedisReply() = delete;	
-	RedisReply(RedisReply&) = delete;	
 	RedisReply(redisReply*);	
 	RedisReply(void*);	
 	virtual ~RedisReply();
 	long long getInteger();
-	BinString getBinString();
-	vector<BinString> getArray();
+	BinString getBinString() const;
+	vector<RedisReply> getArray() const;
 	static const string getTypeName( int );
 	friend ostream& operator<< ( ostream& os, const RedisReply& );
 private:

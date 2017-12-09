@@ -8,6 +8,7 @@
 #include <log4cplus/logger.h>
 #include <log4cplus/configurator.h>
 #include <log4cplus/loggingmacros.h>
+#include <future>
 
 #include "RedisReply.h"
 #include "BinString.h"
@@ -21,6 +22,18 @@ void callback(redisAsyncContext *ac, void *r, void *privdata) {
 	RedisReply reply( r );
     cout << reply << endl;
 
+}
+
+void stopCallback(redisAsyncContext *ac, void *r, void *privdata) {
+	LOG4CPLUS_TRACE(logger, __PRETTY_FUNCTION__);
+	RedisReply reply( r );
+    cout << reply << endl;
+
+    auto vec = reply.getArray();
+    if ( !vec.empty() && vec[0].getBinString().castString() == "message" ) {
+		LOG4CPLUS_DEBUG(logger, "redisAsyncDisconnect" );
+		redisAsyncDisconnect(ac);
+    }
 }
 
 void connectCallback(const redisAsyncContext *ac, int status) {
@@ -76,19 +89,25 @@ int main() {
     LOG4CPLUS_DEBUG(logger, "get" );
     redisAsyncCommand(ac, callback, NULL, "GET b/b.f32");
 
-    for ( int i = 0; i<10000; ++i ) {
-		LOG4CPLUS_DEBUG(logger, "mget" );
-		redisAsyncCommand(ac, callback, NULL, "MGET a/a.f32 b/b.f32");
-    }
+//    for ( int i = 0; i<10; ++i ) {
+//		LOG4CPLUS_DEBUG(logger, "mget" );
+//		redisAsyncCommand(ac, callback, NULL, "MGET a/a.f32 b/b.f32");
+//    }
 
-	LOG4CPLUS_DEBUG(logger, "redisAsyncDisconnect" );
-	/* Disconnect after receiving the reply to GET */
-	redisAsyncDisconnect(ac);
+    LOG4CPLUS_DEBUG(logger, "sub" );
+    redisAsyncCommand(ac, callback, NULL, "subscribe c");
+
+    LOG4CPLUS_DEBUG(logger, "stop" );
+    redisAsyncCommand(ac, stopCallback, NULL, "subscribe stop");
 
     LOG4CPLUS_DEBUG(logger, "event_base_dispatch" );
-    event_base_dispatch(base);
+    //event_base_dispatch(base);
+    auto dispatch = [](struct event_base *base){event_base_dispatch(base);};
+    auto future = std::async( std::launch::async, dispatch, base );
 
+    //...
 
+    //future.get();
 	cout << "---------------- end   program ------------" << endl;
 	return 0;
 }

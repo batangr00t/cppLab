@@ -29,7 +29,7 @@ long long RedisReply::getInteger() {
 	}
 }
 
-BinString RedisReply::getBinString() {
+BinString RedisReply::getBinString() const {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__);
 	if ( _reply == nullptr ) {
 		LOG4CPLUS_ERROR(_logger, "_reply is nullptr" );
@@ -39,17 +39,17 @@ BinString RedisReply::getBinString() {
 	}
 }
 
-vector<BinString> RedisReply::getArray() {
+vector<RedisReply> RedisReply::getArray() const {
 	LOG4CPLUS_TRACE(_logger, __PRETTY_FUNCTION__);
 	if ( _reply == nullptr ) {
 		LOG4CPLUS_ERROR(_logger, "_reply is nullptr" );
-		return vector<BinString>();
+		return vector<RedisReply>();
 	} else {
-		vector<BinString> array;
+		vector<RedisReply> array;
 		array.reserve(_reply->elements);
 		for ( size_t i=0; i<_reply->elements; i++ ) {
 			LOG4CPLUS_TRACE(_logger, "push_back[" << i << "]");
-			array.push_back( BinString(_reply->element[i]->str,_reply->element[i]->len) );
+			array.push_back( RedisReply(_reply->element[i]) );
 		}
 		return array;
 	}
@@ -70,16 +70,16 @@ const string RedisReply::getTypeName( int t ) {
 ostream& operator<< ( ostream& os, const RedisReply &reply ) {
 	redisReply * pr = reply._reply;
 	if ( pr == nullptr ) {
-		os << "_reply is nullptr ";
+		os << "_reply is nullptr";
 	} else {
-		os << "RedisReply["
+		os << "RR["
 		<< pr << "]{"
-		<< "type:" << pr->type << "(" << RedisReply::getTypeName(pr->type) << "), "
-		<< "integer:" << pr->integer << ", "
-		<< "{len:" << pr->len << ", "
+		<< "type:" << pr->type << "(" << RedisReply::getTypeName(pr->type) << "),"
+		<< "integer:" << pr->integer << ","
+		<< "{len:" << pr->len << ","
 		<< "str:\"" << string(pr->str, pr->len ) << "\"}";
 		if ( pr->type ==  REDIS_REPLY_ARRAY ) {
-			os <<"{#elements:" << pr->elements ;
+			os <<"{#elements:" << pr->elements << ",";
 			for ( size_t i=0; i<pr->elements; i++) {
 				os << RedisReply( pr->element[i] );
 			}

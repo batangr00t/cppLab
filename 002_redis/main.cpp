@@ -55,14 +55,15 @@ int main(int argc, char *argv[]) {
 	for ( j=0; j<count; j++ ) {
 		RedisReply replyWrapper(redisCommand( c, MGET.c_str()) );
 		cout << replyWrapper << endl;
-		vector<BinString> binStrs = replyWrapper.getArray();
+		auto vec = replyWrapper.getArray();
 		cout << "3." << j << " display ----" << endl;
-		for ( const BinString& bs: binStrs ) {
-			cout << bs.castString() << endl;
-			cout << bs.castAny<int>() << endl;
-			cout << bs.castAny<long>() << endl;
-			cout << bs.castAny<float>() << endl;
-			cout << bs.castAny<double>() << endl;
+		for ( const RedisReply& r: vec ) {
+			BinString bin = r.getBinString();
+			cout << bin.castString() << endl;
+			cout << bin.castAny<int>() << endl;
+			cout << bin.castAny<long>() << endl;
+			cout << bin.castAny<float>() << endl;
+			cout << bin.castAny<double>() << endl;
 		}
 	}
 	cout << "3. ------ free context" << endl;

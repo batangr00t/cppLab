@@ -31,4 +31,5 @@ target_link_libraries(async
 	${CPPLAB_hiredis}
 	${CPPLAB_log4cplus}
 	${CPPLAB_event}
+	pthread
 	)
