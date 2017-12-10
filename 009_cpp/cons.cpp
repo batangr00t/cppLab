@@ -10,16 +10,16 @@ using namespace std;
 
 class Point {
 private:
-	int x;
-	int y;
+	int _x;
+	int _y;
 
 public:
-	Point( int a = 0, int b= 0 ): x(a), y(b) {
-		clog << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
+	Point( int a = 0, int b= 0 ): _x(a), _y(b) {
+		clog << __PRETTY_FUNCTION__ << " (" << _x << ", " << _y << ")" << endl;
 	}
 
 	virtual ~Point() {
-		clog << __PRETTY_FUNCTION__ << " (" << x << ", " << y << ")" << endl;
+		clog << __PRETTY_FUNCTION__ << " (" << _x << ", " << _y << ")" << endl;
 	}
 
 };

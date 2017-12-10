@@ -4,10 +4,10 @@ using namespace std;
 
 class Point {
 private:
-	int x;
-	int y;
+	int _x;
+	int _y;
 public:
-	Point( int a, int b ): x(a), y(b) {
+	Point( int a, int b ): _x(a), _y(b) {
 		cout << this << __PRETTY_FUNCTION__<< *this << endl;
 	}
 
@@ -17,26 +17,26 @@ public:
 
 	Point operator+( const Point& p ) {
 		cout << *this << " + " << p << endl;
-		return Point( x + p.x, y + p.y );
+		return Point( _x + p._x, _y + p._y );
 	}
 
 	Point& operator+=( const Point& p ) {
 		cout << *this << " += " << p << endl;
-		this->x += p.x;
-		this->y += p.y;
+		this->_x += p._x;
+		this->_y += p._y;
 		return *this;
 	}
 
 	Point& sum( const Point& p ) {
 		cout << *this << " += " << p << endl;
-		x += p.x;
-		y += p.y;
+		_x += p._x;
+		_y += p._y;
 		return *this;
 	}
 
 	Point& operator()( int n ) {
-		x += n;
-		y += n;
+		_x += n;
+		_y += n;
 		return *this;
 	}
 
@@ -44,7 +44,7 @@ public:
 };
 
 ostream& operator<<( ostream& os, const Point& p ) {
-	os << "(" << p.x << "," << p.y << ")";
+	os << "(" << p._x << "," << p._y << ")";
 	return os;
 }
 

@@ -10,17 +10,17 @@
 
 using namespace std;
 
-Point::Point(): x(0), y(0) {
+Point::Point(): _x(0), _y(0) {
 	cout << __PRETTY_FUNCTION__ << *this << endl;
 }
 
-Point::Point( int a, int b ): x(a), y(b) {
+Point::Point( int a, int b ): _x(a), _y(b) {
 	cout << __PRETTY_FUNCTION__ << *this << endl;
 }
 
 Point::Point( const Point& p ) {
-	x = p.x;
-	y = p.y;
+	_x = p._x;
+	_y = p._y;
 	cout << __PRETTY_FUNCTION__ << *this << endl;
 }
 Point::~Point() {
@@ -28,23 +28,23 @@ Point::~Point() {
 };
 
 double Point::norm() const {
-	return sqrt( x * x + y * y );
+	return sqrt( _x * _x + _y * _y );
 }
 
 Point Point::operator+( const Point& p ) {
 	cout << *this << " + " << p << endl;
-	return Point( x + p.x, y + p.y );
+	return Point( _x + p._x, _y + p._y );
 }
 
 Point& Point::operator+=( const Point& p ) {
 	cout << *this << " += " << p << endl;
-	x += p.x;
-	y += p.y;
+	_x += p._x;
+	_y += p._y;
 	return *this;
 }
 
 ostream& operator<< (ostream& os, const Point& p ) {
-	os << &p << "(" << p.x << ", " << p.y << ")";
+	os << &p << "(" << p._x << ", " << p._y << ")";
 	return os;
 }
 
