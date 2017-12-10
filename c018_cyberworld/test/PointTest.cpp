@@ -1,5 +1,8 @@
-#include "Point.h"
 #include "gtest/gtest.h"
+#include "Point.h"
+#include <random>
+
+using namespace std;
 
 namespace {
 
@@ -35,7 +38,18 @@ protected:
 
 // Tests that the Foo::Bar() method does Abc.
 TEST_F(PointTest, consdest) {
-//
+	random_device rd;
+	mt19937 gen(rd());
+	normal_distribution<> dis(0, 10);
+
+	for ( int i=0; i<10; ++i ) {
+		Point p( dis(gen), dis(gen) );
+		cout << p << endl;
+	}
+}
+
+TEST_F(PointTest, move) {
+
 }
 
 }  // namespace

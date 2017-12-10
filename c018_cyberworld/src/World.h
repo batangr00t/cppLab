@@ -12,23 +12,35 @@
 #include <log4cplus/loggingmacros.h>
 #include <ostream>
 #include "Point.h"
+#include "PointBuilder.h"
 
 class World {
 public:
     static World& getInstance();
-    uint32_t get_point_count() const;
-    void add_point(unsigned int n);
+    size_t getSize() const;
+    void generatePoints(PointBuilderInterface& builder, size_t n );
+
+    // get current seq
+    unsigned int currentTime() const;
+
+	// get force
+	std::pair<double, double> F(const Point&) const;
+
+	// pulse
+	void move();
 
     friend std::ostream& operator<<( std::ostream& os, const World& world);
 
 private:
-    log4cplus::Logger logger;
+    log4cplus::Logger _logger;
 
     World();
     virtual ~World();
 
-    std::set<Point> _points;
-    std::mutex _m;
+    std::set<PointPtr> _points;
+    std::mutex         _points_mutex;
+
+    std::atomic<unsigned int> _currentTime;
 };
 
 

@@ -3,7 +3,7 @@
 //
 
 #include "World.h"
-#include <boost/log/trivial.hpp>
+#include "PointBuilder.h"
 
 using namespace std;
 
@@ -13,31 +13,53 @@ World &World::getInstance() {
 }
 
 World::World() :
-	logger( log4cplus::Logger::getInstance( LOG4CPLUS_TEXT("World"))) {
-	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
+	_logger( log4cplus::Logger::getInstance( LOG4CPLUS_TEXT("World"))) {
+	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
+
+	PointBuilder builder;
 };
 
 World::~World() {
-	LOG4CPLUS_TRACE( logger, __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
 };
 
-uint32_t World::get_point_count() const {
+size_t World::getSize() const {
     return _points.size();
 }
 
-void World::add_point(unsigned int n) {
-    lock_guard<mutex> lg( _m);
+void World::generatePoints(PointBuilderInterface& builder, size_t n ) {
+	for ( size_t i = 0; i<n; ++i ) {
+		_points.insert( builder.getNext() );
+	}
+}
+// get current seq
+unsigned int World::currentTime() const {
+	return _currentTime;
+}
 
-    for ( unsigned int i = 0; i<n; ++i ) {
-    	_points.emplace(i,i);
-    }
+// get force
+pair<double, double> World::F(const Point& point) const {
+	double fx = - point.x();
+	double fy = - point.y();
+
+	return make_pair( fx, fy );
+}
+
+// pulse
+void  World::move() {
+	++_currentTime;
+
+	for ( const auto& p : _points ) {
+		if ( p ) p->move();
+	}
 }
 
 ostream& operator<<( std::ostream& os, const World& world) {
-	os << "World{" << world.get_point_count() << ":";
+	os << "World has " << world.getSize() << " points\n";
+	os << "[" << world._currentTime << "]\t";
 	for ( const auto& e : world._points ) {
-		os << e;
+		if ( e ) os << *e;
+		else os << "(,)";
 	}
-	os << "}";
 	return os;
 }

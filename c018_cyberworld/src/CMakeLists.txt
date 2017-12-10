@@ -7,5 +7,8 @@ add_executable( world
 target_link_libraries( world
 	${log4cplus_lib}
 	)
-target_include_directories( world PUBLIC )
+	
+target_include_directories( world PUBLIC
+	src
+	)
 		

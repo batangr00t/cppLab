@@ -8,8 +8,15 @@ include_directories(
 
 
 ##### PointTest
-add_executable(PointTest PointTest.cpp )
+add_executable(PointTest 
+	PointTest.cpp
+	../src/Point.cpp
+	../src/PointBuilder.cpp
+	../src/World.cpp
+	)
+	
 target_link_libraries(PointTest 
 	${GTEST_LIBRARIES}
+	${log4cplus_lib}
 	pthread
 	)

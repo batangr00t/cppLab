@@ -1,8 +1,11 @@
 #include <iostream>
+#include <thread>
 #include <log4cplus/logger.h>
 #include <log4cplus/configurator.h>
 #include <log4cplus/loggingmacros.h>
 #include "World.h"
+
+using namespace std;
 
 int main() {
 	log4cplus::initialize();
@@ -12,9 +15,14 @@ int main() {
 	LOG4CPLUS_INFO( logger, "===== start ");
 
 	World& world = World::getInstance();
+	PointBuilder builder;
+	world.generatePoints(builder, 50);
 
-	world.add_point(10);
-	LOG4CPLUS_INFO( logger, world );
+	for ( int i = 0; i<20; ++i ) {
+		cout << world << endl;
+		this_thread::sleep_for( chrono::milliseconds(1000));
+		world.move();
+	}
 
 	LOG4CPLUS_INFO( logger, "===== end " );
     return 0;
