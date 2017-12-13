@@ -24,7 +24,7 @@ Point::~Point() {
 	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
 }
 
-void Point::run() {
+void Point::start() {
 	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
 
 }

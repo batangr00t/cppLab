@@ -15,7 +15,7 @@ int main() {
 	LOG4CPLUS_INFO( logger, "===== start ");
 
 	World& world = World::getInstance();
-	PointBuilder builder;
+	PointBuilderRandom builder;
 	world.generatePoints(builder, 50);
 
 	for ( int i = 0; i<20; ++i ) {

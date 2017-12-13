@@ -17,6 +17,6 @@ add_executable(PointTest
 	
 target_link_libraries(PointTest 
 	${GTEST_LIBRARIES}
-	${log4cplus_lib}
+	log4cplus
 	pthread
 	)

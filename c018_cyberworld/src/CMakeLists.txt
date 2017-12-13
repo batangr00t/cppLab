@@ -5,7 +5,7 @@ add_executable( world
 	World.cpp
 	)
 target_link_libraries( world
-	${log4cplus_lib}
+	log4cplus
 	)
 	
 target_include_directories( world PUBLIC

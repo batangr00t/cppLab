@@ -3,7 +3,8 @@
 //
 
 #include "World.h"
-#include "PointBuilder.h"
+
+#include "PointBuilderRandom.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ World::World() :
 	_logger( log4cplus::Logger::getInstance( LOG4CPLUS_TEXT("World"))) {
 	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
 
-	PointBuilder builder;
+	PointBuilderRandom builder;
 };
 
 World::~World() {

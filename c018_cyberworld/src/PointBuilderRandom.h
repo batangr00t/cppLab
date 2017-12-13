@@ -10,11 +10,11 @@
 #include "Point.h"
 #include "PointBuilderInterface.h"
 
-class PointBuilder : public PointBuilderInterface {
+class PointBuilderRandom : public PointBuilderInterface {
 public:
-	PointBuilder();
-	PointBuilder(double start, double end);
-	virtual ~PointBuilder();
+	PointBuilderRandom();
+	PointBuilderRandom(double start, double end);
+	virtual ~PointBuilderRandom();
 
 	PointPtr getNext();
 

@@ -2,14 +2,14 @@
 // Created by cho on 17. 11. 26.
 //
 
-#include "PointBuilder.h"
+#include "PointBuilderRandom.h"
 
 using namespace std;
 
-PointBuilder::PointBuilder() : PointBuilder(0, 100) {
+PointBuilderRandom::PointBuilderRandom() : PointBuilderRandom(0, 100) {
 }
 
-PointBuilder::PointBuilder(double start, double end) :
+PointBuilderRandom::PointBuilderRandom(double start, double end) :
 	_logger{ log4cplus::Logger::getInstance( LOG4CPLUS_TEXT("PointBuilder")) },
 	_start{start}, _end{end},
 	_gen{random_device()()},
@@ -18,11 +18,11 @@ PointBuilder::PointBuilder(double start, double end) :
 	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
 }
 
-PointBuilder::~PointBuilder() {
+PointBuilderRandom::~PointBuilderRandom() {
 	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
 }
 
-PointPtr PointBuilder::getNext() {
+PointPtr PointBuilderRandom::getNext() {
 	return PointPtr( new Point(getRandomCordiante()) ) ;
 }
 

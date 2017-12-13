@@ -18,8 +18,11 @@ public:
     inline double x() const { return _x; };
     inline double y() const { return _y; };
 
-    // start move automatically
+    // main function
     void run();
+
+    // start move automatically
+    void start();
     void stop();
 
     // move one step

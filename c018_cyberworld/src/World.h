@@ -12,7 +12,7 @@
 #include <log4cplus/loggingmacros.h>
 #include <ostream>
 #include "Point.h"
-#include "PointBuilder.h"
+#include "PointBuilderRandom.h"
 
 class World {
 public:
