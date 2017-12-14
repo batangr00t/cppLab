@@ -39,9 +39,10 @@ public:
 	// --------------------------------------------------------------------------------
 
 	// control method
-	void init();     // execute doInitialize() and wait start
-	void start();    // execute doRun() which is the main loop
-	void stop();     // execute doFinalize() and stop thread
+	void init();        // execute doInitialize() and wait start
+	void start();       // execute doRun() which is the main loop
+	void stop();        // execute doFinalize() and stop thread
+	void wait();        // wait for termination
 
 	// mission method
 	virtual bool doInitilize() = 0;
@@ -55,11 +56,12 @@ public:
 	friend std::ostream& operator<<( std::ostream& os, const ActiveObject& object );
 
 protected:
-	// main loop
-	void _main();
-
 	// logger
 	log4cplus::Logger _logger;
+
+private:
+	// main loop
+	bool _main();
 
 	// active object name
 	std::string _name;
@@ -68,7 +70,7 @@ protected:
 	std::atomic<State> _state;
 
 	// mail loop result
-	std::future<void> _main_loop_result;
+	std::future<bool> _main_loop_result;
 
 };
 

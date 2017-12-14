@@ -14,53 +14,60 @@ ActiveObject::ActiveObject(const std::string& name) :
 	_logger( log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("ActiveObject"))),
 	_name( name ),
 	_state( State::CREATED ) {
-	LOG4CPLUS_TRACE( _logger, *this << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE( _logger, *this << __FUNCTION__ );
 
-	_main_loop_result = async( launch::async, &ActiveObject::_main, this );
+	try {
+		_main_loop_result = async( launch::async, &ActiveObject::_main, this );
+	} catch( const exception& e ) {
+		LOG4CPLUS_ERROR( _logger, e.what() );
+	}
 }
 
 ActiveObject::~ActiveObject() {
-	LOG4CPLUS_TRACE( _logger, *this << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE( _logger, *this << __FUNCTION__ );
 
-	stop();
-
-	future_status status = _main_loop_result.wait_for( chrono::milliseconds(2000));
-	if ( status == future_status::ready ) {
-		LOG4CPLUS_INFO( _logger, "future_status::ready " << *this );
-	} else if ( status == future_status::timeout ) {
-		LOG4CPLUS_INFO( _logger, "future_status::timeout " << *this );
-	} else if ( status == future_status::deferred ) {
-		LOG4CPLUS_INFO( _logger, "future_status::deferred " << *this );
-	}
-
-	_main_loop_result.get();
 }
 
 void ActiveObject::init() {
 	_state = State::INITIALIZING;
-	LOG4CPLUS_TRACE( _logger, *this << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE( _logger, *this << __FUNCTION__ );
 }
 
 void ActiveObject::start() {
 	_state = State::RUNNING;
-	LOG4CPLUS_TRACE( _logger, *this << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE( _logger, *this << __FUNCTION__ );
 }
 
-// stop thread
 void ActiveObject::stop() {
 	_state = State::FINALIZING;
-	LOG4CPLUS_TRACE( _logger, *this << __PRETTY_FUNCTION__ );
+	LOG4CPLUS_TRACE( _logger, *this << __FUNCTION__ );
+}
+
+void ActiveObject::wait() {
+	try {
+		future_status status = _main_loop_result.wait_for( chrono::milliseconds(2000) );
+		if ( status == future_status::ready ) {
+			LOG4CPLUS_INFO( _logger, "future_status::ready " << *this );
+			_main_loop_result.get();
+		} else if ( status == future_status::timeout ) {
+			LOG4CPLUS_INFO( _logger, "future_status::timeout " << *this );
+		} else if ( status == future_status::deferred ) {
+			LOG4CPLUS_INFO( _logger, "future_status::deferred " << *this );
+		}
+	} catch( const exception& e ) {
+		LOG4CPLUS_ERROR( _logger, e.what() );
+	}
 }
 
 ActiveObject::State ActiveObject::getState() const {
 	return _state;
 }
 
-void ActiveObject::_main() {
-	LOG4CPLUS_INFO( _logger, *this << __PRETTY_FUNCTION__ );
+bool ActiveObject::_main() {
+	LOG4CPLUS_INFO( _logger, *this << __FUNCTION__ );
 
 	while( _state != State::STOPPED ) {
-		this_thread::sleep_for( chrono::milliseconds(500));
+		this_thread::sleep_for( chrono::milliseconds(100));
 
 		switch ( _state ) {
 		case ActiveObject::State::CREATED:
@@ -73,7 +80,7 @@ void ActiveObject::_main() {
 				_state = State::READY;
 			} else {
 				LOG4CPLUS_ERROR( _logger, *this << " doInitilize() failed" );
-				stop();
+				_state = State::FINALIZING;
 			}
 			break;
 
@@ -86,7 +93,7 @@ void ActiveObject::_main() {
 				LOG4CPLUS_INFO( _logger, *this << " doRun() succeed" );
 			} else {
 				LOG4CPLUS_ERROR( _logger, *this << " doRun() failed" );
-				stop();
+				_state = State::FINALIZING;
 			}
 			break;
 
@@ -104,8 +111,9 @@ void ActiveObject::_main() {
 			break;
 		}
 	}
-	LOG4CPLUS_INFO( _logger, *this << " stop!!" );
-};
+
+	return true;
+}
 
 std::ostream& operator<<( std::ostream& os, const ActiveObject& object ) {
 	os << "AO(\"" << object._name << "\"," << object._state << ")";

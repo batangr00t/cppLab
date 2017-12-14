@@ -19,16 +19,14 @@ int main() {
 
 	LOG4CPLUS_INFO( logger, "====== start =========" );
 	Sample sample("sample");
-	this_thread::sleep_for( chrono::seconds(1));
+	Sample bar("haha");
 
 	sample.init();
-	this_thread::sleep_for( chrono::seconds(1));
+	bar.init();
 
 	sample.start();
-	this_thread::sleep_for( chrono::seconds(1));
-
+	bar.stop();
 	sample.stop();
-	this_thread::sleep_for( chrono::seconds(1));
 
 	LOG4CPLUS_INFO( logger, "====== end =========" );
 }
