@@ -6,7 +6,6 @@
  */
 
 #include "ActiveObject.h"
-#include <future>
 
 using namespace std;
 
@@ -43,7 +42,8 @@ void ActiveObject::stop() {
 	LOG4CPLUS_TRACE( _logger, *this << __FUNCTION__ );
 }
 
-void ActiveObject::wait() {
+// protected
+void ActiveObject::_wait() {
 	try {
 		future_status status = _main_loop_result.wait_for( chrono::milliseconds(2000) );
 		if ( status == future_status::ready ) {
@@ -59,10 +59,7 @@ void ActiveObject::wait() {
 	}
 }
 
-ActiveObject::State ActiveObject::getState() const {
-	return _state;
-}
-
+// private
 bool ActiveObject::_main() {
 	LOG4CPLUS_INFO( _logger, *this << __FUNCTION__ );
 

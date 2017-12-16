@@ -9,8 +9,8 @@
 #define C013_ACTIVE_OBJECT_ACTIVEOBJECT_H_
 
 #include <log4cplus/loggingmacros.h>
-#include <future>
 #include <atomic>
+#include <future>
 
 // The active object is the object which has a thread
 // The thread is created when an active object is constructed and terminated on destruction.
@@ -42,7 +42,6 @@ public:
 	void init();        // execute doInitialize() and wait start
 	void start();       // execute doRun() which is the main loop
 	void stop();        // execute doFinalize() and stop thread
-	void wait();        // wait for termination
 
 	// mission method
 	virtual bool doInitilize() = 0;
@@ -50,7 +49,9 @@ public:
 	virtual bool doFinalize() = 0;
 
 	// monitoring
-	State getState() const;
+	inline State getState() const noexcept { return _state; };
+
+	inline std::string getName() const noexcept { return _name; };
 
 	// operator overloading
 	friend std::ostream& operator<<( std::ostream& os, const ActiveObject& object );
@@ -58,6 +59,9 @@ public:
 protected:
 	// logger
 	log4cplus::Logger _logger;
+
+	// wait for termination
+	void _wait();
 
 private:
 	// main loop

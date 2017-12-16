@@ -18,6 +18,8 @@ public:
 	bool doInitilize();
 	bool doRun();
 	bool doFinalize();
+
+	friend std::ostream& operator<<(std::ostream& os, const Sample& sample );
 };
 
 #endif /* C013_RUNNABLE_SAMPLERUNNABLE_H_ */
