@@ -13,25 +13,26 @@
 class PointBuilderRandom : public PointBuilderInterface {
 public:
 	PointBuilderRandom();
-	PointBuilderRandom(double start, double end);
+	PointBuilderRandom(double max_x, double max_y);
 	virtual ~PointBuilderRandom();
 
 	PointPtr getNext();
 
 	std::pair<double, double> getRandomCordiante() {
-		return std::make_pair( _distribution(_gen), _distribution(_gen) );
+		return std::make_pair( _distribution_x(_gen), _distribution_y(_gen) );
 	}
 
 private:
     log4cplus::Logger _logger;
 
     // point x, y interval
-	double _start;
-	double _end;
+	double _max_x;
+	double _max_y;
 
     // random number generator
     std::mt19937 _gen;
-    std::uniform_real_distribution<double> _distribution;
+    std::uniform_real_distribution<double> _distribution_x;
+    std::uniform_real_distribution<double> _distribution_y;
 };
 
 

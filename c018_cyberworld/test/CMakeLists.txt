@@ -10,8 +10,9 @@ include_directories(
 ##### PointTest
 add_executable(PointTest 
 	PointTest.cpp
+	../src/ActiveObject.cpp
 	../src/Point.cpp
-	../src/PointBuilder.cpp
+	../src/PointBuilderRandom.cpp
 	../src/World.cpp
 	)
 	

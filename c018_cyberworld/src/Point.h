@@ -6,27 +6,22 @@
 #define CPP_POINT_H
 
 #include <log4cplus/loggingmacros.h>
+#include <chrono>
+#include "ActiveObject.h"
 
-class Point {
+class Point : public ActiveObject {
 public:
     Point();
     Point(double, double);
     Point(const std::pair<double, double>&);
     virtual ~Point();
 
+    // implement
+	bool doRun() override;
+
     // get
     inline double x() const { return _x; };
     inline double y() const { return _y; };
-
-    // main function
-    void run();
-
-    // start move automatically
-    void start();
-    void stop();
-
-    // move one step
-    void move();
 
     // operator : <
     friend bool operator<( const Point& lhs, const Point& rhs );
@@ -35,7 +30,8 @@ public:
     friend std::ostream& operator<<( std::ostream&, const Point& );
 
 private:
-    log4cplus::Logger _logger;
+    // sequence number
+    static int _seq;
 
     // mass( Kg )
     double _mass;
@@ -44,8 +40,12 @@ private:
     double _x;
     double _y;
 
-    // last seq
-    unsigned int _lastTime = 0;
+    // velocity
+    double _vx{0};
+    double _vy{0};
+
+    // last time
+    std::chrono::time_point<std::chrono::steady_clock> _lastTime;
 };
 
 

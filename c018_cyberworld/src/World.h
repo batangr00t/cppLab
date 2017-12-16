@@ -20,14 +20,14 @@ public:
     size_t getSize() const;
     void generatePoints(PointBuilderInterface& builder, size_t n );
 
-    // get current seq
-    unsigned int currentTime() const;
+	//get points
+	const std::set<PointPtr>& getPoints() const;
 
 	// get force
-	std::pair<double, double> F(const Point&) const;
+	std::pair<double, double> getForce(const Point&) const;
 
-	// pulse
-	void move();
+	// make time fly
+	void tictoc();
 
     friend std::ostream& operator<<( std::ostream& os, const World& world);
 
@@ -39,8 +39,6 @@ private:
 
     std::set<PointPtr> _points;
     std::mutex         _points_mutex;
-
-    std::atomic<unsigned int> _currentTime;
 };
 
 

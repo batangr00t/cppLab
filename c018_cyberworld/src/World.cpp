@@ -3,8 +3,8 @@
 //
 
 #include "World.h"
-
 #include "PointBuilderRandom.h"
+#include "Define.h"
 
 using namespace std;
 
@@ -14,50 +14,50 @@ World &World::getInstance() {
 }
 
 World::World() :
-	_logger( log4cplus::Logger::getInstance( LOG4CPLUS_TEXT("World"))) {
-	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
+	_logger{ log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("World")) } {
+	LOG4CPLUS_INFO( _logger, __PRETTY_FUNCTION__ );
 
-	PointBuilderRandom builder;
 };
 
 World::~World() {
-	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
-};
+	LOG4CPLUS_INFO( _logger, __PRETTY_FUNCTION__ );
 
-size_t World::getSize() const {
-    return _points.size();
-}
+	for ( const auto& p : _points ) {
+		if ( p ) p->stop();
+	}
+};
 
 void World::generatePoints(PointBuilderInterface& builder, size_t n ) {
 	for ( size_t i = 0; i<n; ++i ) {
-		_points.insert( builder.getNext() );
+		auto pPoint = builder.getNext();
+		pPoint->start();
+		_points.insert( pPoint );
 	}
 }
-// get current seq
-unsigned int World::currentTime() const {
-	return _currentTime;
+
+const std::set<PointPtr>& World::getPoints() const {
+	return _points;
 }
 
 // get force
-pair<double, double> World::F(const Point& point) const {
-	double fx = - point.x();
-	double fy = - point.y();
+pair<double, double> World::getForce(const Point& point) const {
+//	int x_direction = point.x() > 0 ? 1 : -1;
+//	int y_direction = point.y() > 0 ? 1 : -1;
+//	double fx = - x_direction * 50 / (point.x() * point.x());
+//	double fy = - y_direction * 50 / (point.y() * point.y());
 
+//	double fx = - point.x() / 3.0 ;
+//	double fy = - point.y() / 3.0 ;
+
+	double norm = sqrt( pow( point.x(), 2) + pow( point.y(), 2) );
+	double fx = - point.y() / norm;
+	double fy = point.x() / norm;
 	return make_pair( fx, fy );
 }
 
-// pulse
-void  World::move() {
-	++_currentTime;
-
-	for ( const auto& p : _points ) {
-		if ( p ) p->move();
-	}
-}
-
 ostream& operator<<( std::ostream& os, const World& world) {
-	os << "World has " << world.getSize() << " points\n";
-	os << "[" << world._currentTime << "]\t";
+	static unsigned int seq;
+	os << "[" << ++seq << "]\t";
 	for ( const auto& e : world._points ) {
 		if ( e ) os << *e;
 		else os << "(,)";

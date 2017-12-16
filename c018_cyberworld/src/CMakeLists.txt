@@ -1,14 +1,16 @@
 add_executable( world
 	main.cpp
+	ActiveObject.cpp
 	Point.cpp
-	PointBuilder.cpp
+	PointBuilderRandom.cpp
 	World.cpp
-	)
-target_link_libraries( world
-	log4cplus
+	Screen.cpp
 	)
 	
-target_include_directories( world PUBLIC
-	src
+target_link_libraries( world
+	log4cplus
+	pthread
+	ncurses
 	)
+
 		
