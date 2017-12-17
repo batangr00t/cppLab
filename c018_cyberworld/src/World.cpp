@@ -3,7 +3,7 @@
 //
 
 #include "World.h"
-#include "PointBuilderRandom.h"
+#include "BuilderRandom.h"
 #include "Define.h"
 
 using namespace std;
@@ -27,31 +27,23 @@ World::~World() {
 	}
 };
 
-void World::generatePoints(PointBuilderInterface& builder, size_t n ) {
+void World::generatePoints(BuilderInterface& builder, size_t n ) {
 	for ( size_t i = 0; i<n; ++i ) {
-		auto pPoint = builder.getNext();
+		auto pPoint = builder.getNext( i % builder.getTypeSize());
 		pPoint->start();
 		_points.insert( pPoint );
 	}
 }
 
-const std::set<PointPtr>& World::getPoints() const {
+const std::set<ActivePointPtr>& World::getActivePoints() const {
 	return _points;
 }
 
 // get force
-pair<double, double> World::getForce(const Point& point) const {
-//	int x_direction = point.x() > 0 ? 1 : -1;
-//	int y_direction = point.y() > 0 ? 1 : -1;
-//	double fx = - x_direction * 50 / (point.x() * point.x());
-//	double fy = - y_direction * 50 / (point.y() * point.y());
+std::pair<double, double> World::getForce(const ActivePoint& ap) const {
+	double fx = - ap.getPoint().x;
+	double fy = - ap.getPoint().y;
 
-//	double fx = - point.x() / 3.0 ;
-//	double fy = - point.y() / 3.0 ;
-
-	double norm = sqrt( pow( point.x(), 2) + pow( point.y(), 2) );
-	double fx = - point.y() / norm;
-	double fy = point.x() / norm;
 	return make_pair( fx, fy );
 }
 

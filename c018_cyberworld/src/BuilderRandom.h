@@ -7,20 +7,25 @@
 
 #include <memory>
 #include <random>
-#include "Point.h"
-#include "PointBuilderInterface.h"
 
-class PointBuilderRandom : public PointBuilderInterface {
+#include "ActivePoint.h"
+#include "BuilderInterface.h"
+
+
+class BuilderRandom : public BuilderInterface {
 public:
-	PointBuilderRandom();
-	PointBuilderRandom(double max_x, double max_y);
-	virtual ~PointBuilderRandom();
+	BuilderRandom();
+	BuilderRandom(double max_x, double max_y);
+	virtual ~BuilderRandom();
 
-	PointPtr getNext();
+	enum Type { CLOCKWISE, COUNTERCLOCKWISE, STOPPED, SIZE };
+	int getTypeSize() {	return Type::SIZE; };
+	ActivePointPtr getNext(int type);
+	ActivePointPtr getClockwise();
+	ActivePointPtr getCounterClockwise();
+	ActivePointPtr getStopped();
 
-	std::pair<double, double> getRandomCordiante() {
-		return std::make_pair( _distribution_x(_gen), _distribution_y(_gen) );
-	}
+
 
 private:
     log4cplus::Logger _logger;

@@ -22,11 +22,14 @@ public:
 	// fence
 	void fence(char material = 219);
 
+	// axes
+	void axes(char material = '+');
+
 	// clear screen except fence
 	void clear();
 
-	// show the world
-	void showWorld();
+	// show the world, return getch
+	int showWorld();
 
 	// show the world
 	void showTitle(unsigned int durationMs = 1000); // show 1sec

@@ -1,8 +1,9 @@
 add_executable( world
 	main.cpp
+	Element.cpp
 	ActiveObject.cpp
-	Point.cpp
-	PointBuilderRandom.cpp
+	ActivePoint.cpp
+	BuilderRandom.cpp
 	World.cpp
 	Screen.cpp
 	)
@@ -12,5 +13,3 @@ target_link_libraries( world
 	pthread
 	ncurses
 	)
-
-		

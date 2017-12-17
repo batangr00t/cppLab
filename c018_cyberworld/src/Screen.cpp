@@ -18,6 +18,7 @@ Screen::Screen() :
 
 	initscr();
 	nodelay(stdscr, true);
+	keypad(stdscr, true);
 	noecho();
 	curs_set(0);
 	getmaxyx( stdscr, _maxHeight, _maxWidth);
@@ -29,8 +30,8 @@ Screen::Screen() :
 
 Screen::~Screen() {
 	LOG4CPLUS_TRACE( _logger, __PRETTY_FUNCTION__ );
-//	nodelay(stdscr, false);
-//	getch();
+	nodelay(stdscr, false);
+	getch();
 	endwin();
 }
 
@@ -42,19 +43,30 @@ std::pair<int,int> Screen::getSize() const {
 void Screen::fence(char material) {
 	// left, right
 	for( int i = 0; i < _maxHeight; ++i ) {
-		move(i, 0);
-		addch( material );
-		move(i, _maxWidth-1);
-		addch( material );
+		mvaddch(i, 0, material );
+		mvaddch(i, _maxWidth-1, material );
 	}
 
 	// top, down
 	for( int i = 0; i < _maxWidth; ++i ) {
-		move(0, i);
-		addch( material );
-		move(_maxHeight-1, i);
-		addch( material );
+		mvaddch(0, i, material );
+		mvaddch(_maxHeight-1, i, material );
 	}
+}
+
+// axis
+void Screen::axes(char material) {
+	// y axis
+	for( int i = 1; i < _maxHeight-1; ++i ) {
+		mvaddch(i, _maxWidth/2, material );
+	}
+
+	// x axis
+	for( int i = 1; i < _maxWidth-1; ++i ) {
+		mvaddch( _maxHeight/2, i, material );
+	}
+
+	mvaddch(_maxHeight/2, _maxWidth/2, '0' );
 }
 
 void Screen::clear() {
@@ -66,36 +78,52 @@ void Screen::clear() {
 	}
 }
 
-void Screen::showWorld() {
+int Screen::showWorld() {
 	World& world = World::getInstance();
 
 	clear();
-	for ( const auto& e: world.getPoints() ) {
-		move(e->y() + _maxHeight/2, e->x() + _maxWidth/2 );
-		printw( e->getName().c_str() );
+	axes();
+	for ( const auto& ap: world.getActivePoints() ) {
+		move(ap->getPoint().y + _maxHeight/2, ap->getPoint().x + _maxWidth/2 );
+		printw( ap->getName().c_str() );
 	}
+	fence();
+	refresh();
 
 	LOG4CPLUS_TRACE( _logger, world );
-
-	refresh();
+	return getch();
 }
 
 // show the world
+// figlet -f smslant Juik World
 void Screen::showTitle(unsigned int durationMs) {
-	move( _maxHeight/2, _maxWidth/2 - 10 );
-	printw( "Welcome to the Juik world!!!");
+	int row = _maxHeight/2 - 2;
+	int col = _maxWidth/2 - 25;
+    mvprintw(row+0, col, R"(     __     _ __     _      __         __   __   ____ )");
+    mvprintw(row+1, col, R"( __ / /_ __(_) /__  | | /| / /__  ____/ /__/ /  / / / )");
+    mvprintw(row+2, col, R"(/ // / // / /  '_/  | |/ |/ / _ \/ __/ / _  /  /_/_/  )");
+    mvprintw(row+3, col, R"(\___/\_,_/_/_/\_\   |__/|__/\___/_/ /_/\_,_/   0 0    )");
 	refresh();
 	this_thread::sleep_for( chrono::milliseconds(durationMs));
 }
 
 // show ending credit
+// figlet -f smslant Good Bye
 void Screen::showEnding(unsigned int durationMs) {
 	clear();
 	fence();
-	move( _maxHeight/2, _maxWidth/2 - 10 );
-	printw( "      Good bye!!!           ");
-	move( _maxHeight/2+2, _maxWidth/2 - 10 );
-	printw( "    Press any key...        ");
+
+	int row = _maxHeight/2 - 3;
+	int col = _maxWidth/2 - 20;
+    mvprintw(row+0, col, R"(  _____             __  ___                  )");
+    mvprintw(row+1, col, R"( / ___/__  ___  ___/ / / _ )__ _____    ____ )");
+    mvprintw(row+2, col, R"(/ (_ / _ \/ _ \/ _  / / _  / // / -_)  / / / )");
+    mvprintw(row+3, col, R"(\___/\___/\___/\_,_/ /____/\_, /\__/  /_/_/  )");
+    mvprintw(row+4, col, R"(                          /___/       0 0    )");
+
+
+    mvprintw(row+8, col, R"(             Press any key...                )");
 	refresh();
 	this_thread::sleep_for( chrono::milliseconds(durationMs));
 }
+

@@ -8,26 +8,24 @@
 #include <log4cplus/loggingmacros.h>
 #include <chrono>
 #include "ActiveObject.h"
+#include "Element.h"
 
-class Point : public ActiveObject {
+class ActivePoint : public ActiveObject {
 public:
-    Point();
-    Point(double, double);
-    Point(const std::pair<double, double>&);
-    virtual ~Point();
+    ActivePoint();
+    ActivePoint(const Element&);
+    ActivePoint(const Element& p, const Element& v);
+    ActivePoint(const Element& p, const Element& v, double mass);
+    virtual ~ActivePoint();
 
     // implement
 	bool doRun() override;
 
     // get
-    inline double x() const { return _x; };
-    inline double y() const { return _y; };
-
-    // operator : <
-    friend bool operator<( const Point& lhs, const Point& rhs );
+    inline Element getPoint() const { return _p; };
 
     // operator : <<
-    friend std::ostream& operator<<( std::ostream&, const Point& );
+    friend std::ostream& operator<<( std::ostream&, const ActivePoint& );
 
 private:
     // sequence number
@@ -37,12 +35,10 @@ private:
     double _mass;
 
     // position
-    double _x;
-    double _y;
+    Element _p;
 
     // velocity
-    double _vx{0};
-    double _vy{0};
+    Element _v{0.0,0.0};
 
     // last time
     std::chrono::time_point<std::chrono::steady_clock> _lastTime;
