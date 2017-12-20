@@ -113,16 +113,20 @@ void Screen::showEnding(unsigned int durationMs) {
 	clear();
 	fence();
 
-	int row = _maxHeight/2 - 3;
+	int row = _maxHeight/2 - 10;
 	int col = _maxWidth/2 - 20;
-    mvprintw(row+0, col, R"(  _____             __  ___                  )");
-    mvprintw(row+1, col, R"( / ___/__  ___  ___/ / / _ )__ _____    ____ )");
-    mvprintw(row+2, col, R"(/ (_ / _ \/ _ \/ _  / / _  / // / -_)  / / / )");
-    mvprintw(row+3, col, R"(\___/\___/\___/\_,_/ /____/\_, /\__/  /_/_/  )");
-    mvprintw(row+4, col, R"(                          /___/       0 0    )");
+    mvprintw(row+0 , col, R"(  _____             __  ___                  )");
+    mvprintw(row+1 , col, R"( / ___/__  ___  ___/ / / _ )__ _____    ____ )");
+    mvprintw(row+2 , col, R"(/ (_ / _ \/ _ \/ _  / / _  / // / -_)  / / / )");
+    mvprintw(row+3 , col, R"(\___/\___/\___/\_,_/ /____/\_, /\__/  /_/_/  )");
+    mvprintw(row+4 , col, R"(                          /___/       0 0    )");
 
 
-    mvprintw(row+8, col, R"(             Press any key...                )");
+    mvprintw(row+7 , col, R"(           Producer   Juik Cho.              )");
+    mvprintw(row+8 , col, R"(           Architect  Juik Cho.              )");
+    mvprintw(row+9 , col, R"(           Designer   Juik Cho.              )");
+    mvprintw(row+10, col, R"(           Programmer Juik Cho.              )");
+    mvprintw(row+13, col, R"(             Press any key...                )");
 	refresh();
 	this_thread::sleep_for( chrono::milliseconds(durationMs));
 }

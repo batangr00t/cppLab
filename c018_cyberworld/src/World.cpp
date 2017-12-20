@@ -29,7 +29,7 @@ World::~World() {
 
 void World::generatePoints(BuilderInterface& builder, size_t n ) {
 	for ( size_t i = 0; i<n; ++i ) {
-		auto pPoint = builder.getNext( i % builder.getTypeSize());
+		auto pPoint = builder.getNext();
 		pPoint->start();
 		_points.insert( pPoint );
 	}

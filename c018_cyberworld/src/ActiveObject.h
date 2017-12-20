@@ -73,7 +73,7 @@ private:
 	// active object state
 	std::atomic<State> _state;
 
-	// mail loop result
+	// main loop result
 	std::future<bool> _main_loop_result;
 
 };

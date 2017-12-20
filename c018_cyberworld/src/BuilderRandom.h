@@ -15,17 +15,16 @@
 class BuilderRandom : public BuilderInterface {
 public:
 	BuilderRandom();
-	BuilderRandom(double max_x, double max_y);
+	BuilderRandom(double max_x, double max_y, int type);
 	virtual ~BuilderRandom();
 
-	enum Type { CLOCKWISE, COUNTERCLOCKWISE, STOPPED, SIZE };
+	enum Type { CLOCKWISE, COUNTERCLOCKWISE, STOPPED, MIXED, SIZE };
 	int getTypeSize() {	return Type::SIZE; };
+	ActivePointPtr getNext() override;
 	ActivePointPtr getNext(int type);
 	ActivePointPtr getClockwise();
 	ActivePointPtr getCounterClockwise();
 	ActivePointPtr getStopped();
-
-
 
 private:
     log4cplus::Logger _logger;
@@ -34,10 +33,14 @@ private:
 	double _max_x;
 	double _max_y;
 
+    // generator type
+	int _type;
+
     // random number generator
     std::mt19937 _gen;
-    std::uniform_real_distribution<double> _distribution_x;
-    std::uniform_real_distribution<double> _distribution_y;
+    std::uniform_int_distribution<>        _dis_type;
+    std::uniform_real_distribution<double> _dis_x;
+    std::uniform_real_distribution<double> _dis_y;
 };
 
 

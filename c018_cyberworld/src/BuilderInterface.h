@@ -14,7 +14,7 @@ class BuilderInterface {
 public:
 	virtual ~BuilderInterface() {};
 	virtual int getTypeSize() = 0;
-	virtual ActivePointPtr getNext(int type) = 0;
+	virtual ActivePointPtr getNext() = 0;
 };
 
 

@@ -56,19 +56,19 @@ bool ActivePoint::doRun() {
 	LOG4CPLUS_DEBUG( _logger, "loopCount = " << loopCount );
 
 	for ( unsigned int step = 0; step < loopCount; ++step ) {
-		// 2. get force
+		// 2. get the force dependent on this object, especially the position
 		auto force = w.getForce( *this );
 
-		// 3. calculate a = F/m
+		// 3. calculate acceleration a = F/m
 		double ax = force.first  / _mass;
 		double ay = force.second / _mass;
-		//LOG4CPLUS_DEBUG( _logger, "ax=" << ax << " ay=" << ay  );
 
-		// 4. calculate new s = v0 * t + 1/2 * a * t^2 = ( v0 + 1/2*a*t ) * t
+		// 4. calculate new position s = s0 + v0 * t + 1/2 * a * t^2
+		//                             = s0 + ( v0 + 1/2*a*t ) * t
 		_p.x += ( _v.x + 1.0 / 2.0 * ax * timeSlice ) * timeSlice;
 		_p.y += ( _v.y + 1.0 / 2.0 * ay * timeSlice ) * timeSlice;
 
-		// 5. calculate new v = a*t
+		// 5. calculate new velocity v = v0 + a*t
 		_v.x += ax * timeSlice;
 		_v.y += ay * timeSlice;
 	}

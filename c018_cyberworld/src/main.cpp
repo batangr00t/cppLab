@@ -18,22 +18,32 @@ int main(int argc, char*argv[]) {
 	log4cplus::PropertyConfigurator::doConfigure("../log4cplus.conf");
 	log4cplus::Logger logger = log4cplus::Logger::getInstance("main");
 
-	int numberOfActiveObject = 5;
+	// 1. get type
+	int type = BuilderRandom::Type::MIXED;
 	if ( argc > 1 ) {
-		numberOfActiveObject = atoi( argv[1] );
+		type = atoi( argv[1] );
 	}
-	LOG4CPLUS_INFO( logger, "===== start " << numberOfActiveObject << " active objects");
+	LOG4CPLUS_INFO( logger, "===== type : " << type );
+
+	// 2. get the number of active Point
+	int numberOfActiveObject = 5;
+	if ( argc > 2 ) {
+		numberOfActiveObject = atoi( argv[2] );
+	}
+	LOG4CPLUS_INFO( logger, "===== # active objects : " << numberOfActiveObject);
+
+	// 3. create the world
+	LOG4CPLUS_INFO( logger, "===== start " );
 	Screen screen;
 	screen.showTitle(2000);
 	{
 		// create the world
 		auto size = screen.getSize();
 		World& world = World::getInstance();
-		BuilderRandom builder{size.second/4.0, size.first/4.0};
+		BuilderRandom builder{size.second/4.0, size.first/4.0, type};
 		world.generatePoints(builder, numberOfActiveObject);
 
 		// show the world
-		//for ( int i = 0; i<(Hz*30); ++i ) {
 		while( true ) {
 			this_thread::sleep_for( chrono::milliseconds(1000/Hz) );
 			int result = screen.showWorld();
