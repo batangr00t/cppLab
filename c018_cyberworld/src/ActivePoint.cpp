@@ -39,7 +39,7 @@ ActivePoint::ActivePoint(const Element& p, const Element& v, double mass ) :
 ActivePoint::~ActivePoint() {
 	LOG4CPLUS_INFO( _logger, *this << __PRETTY_FUNCTION__ );
 
-	_wait();
+	wait();
 
 	LOG4CPLUS_INFO( _logger, *this << " end ----" );
 }

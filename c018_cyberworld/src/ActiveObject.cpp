@@ -44,9 +44,9 @@ void ActiveObject::stop() {
 }
 
 // protected
-void ActiveObject::_wait() {
+void ActiveObject::wait(unsigned int msec) {
 	try {
-		future_status status = _main_loop_result.wait_for( chrono::milliseconds(2000) );
+		future_status status = _main_loop_result.wait_for( chrono::milliseconds(msec) );
 		if ( status == future_status::ready ) {
 			LOG4CPLUS_DEBUG( _logger, "future_status::ready " << *this );
 			_main_loop_result.get();

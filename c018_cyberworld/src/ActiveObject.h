@@ -61,7 +61,7 @@ protected:
 	log4cplus::Logger _logger;
 
 	// wait for termination
-	void _wait();
+	void wait(unsigned int msec = 2000);
 
 private:
 	// main loop
