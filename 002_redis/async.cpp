@@ -21,7 +21,7 @@ void callback(redisAsyncContext *ac, void *r, void *privdata) {
 	LOG4CPLUS_TRACE(logger, __PRETTY_FUNCTION__);
 	RedisReply reply( r );
     cout << reply << endl;
-
+    this_thread::sleep_for( chrono::milliseconds(200) );
 }
 
 void stopCallback(redisAsyncContext *ac, void *r, void *privdata) {
@@ -29,11 +29,7 @@ void stopCallback(redisAsyncContext *ac, void *r, void *privdata) {
 	RedisReply reply( r );
     cout << reply << endl;
 
-    auto vec = reply.getArray();
-    if ( !vec.empty() && vec[0].getBinString().castString() == "message" ) {
-		LOG4CPLUS_DEBUG(logger, "redisAsyncDisconnect" );
-		redisAsyncDisconnect(ac);
-    }
+	redisAsyncDisconnect(ac);
 }
 
 void connectCallback(const redisAsyncContext *ac, int status) {
@@ -97,17 +93,32 @@ int main() {
     LOG4CPLUS_DEBUG(logger, "sub" );
     redisAsyncCommand(ac, callback, NULL, "subscribe c");
 
-    LOG4CPLUS_DEBUG(logger, "stop" );
-    redisAsyncCommand(ac, stopCallback, NULL, "subscribe stop");
-
     LOG4CPLUS_DEBUG(logger, "event_base_dispatch" );
-    //event_base_dispatch(base);
-    auto dispatch = [](struct event_base *base){event_base_dispatch(base);};
-    auto future = std::async( std::launch::async, dispatch, base );
+//    event_base_dispatch(base);
 
-    //...
+    try {
+    	auto dispatch = [&](struct event_base *base){event_base_dispatch(base);};
+    	auto future = std::async( std::launch::async, dispatch, base );
 
-    //future.get();
+    	//...
+
+    	this_thread::sleep_for( chrono::seconds(10) );
+    	redisAsyncDisconnect(ac);
+
+    	future_status status;
+    	do {
+			status = future.wait_for(chrono::seconds(1));
+			if ( status == future_status::ready ) {
+				future.get();
+			} else if ( status == future_status::timeout ) {
+				LOG4CPLUS_ERROR(logger, "timeout" );
+			} else if ( status == future_status::deferred ) {
+				LOG4CPLUS_ERROR(logger, "deferred" );
+			}
+    	} while( status != future_status::ready );
+    } catch ( const exception& e ) {
+    	LOG4CPLUS_ERROR(logger, e.what() );
+    }
 	cout << "---------------- end   program ------------" << endl;
 	return 0;
 }
